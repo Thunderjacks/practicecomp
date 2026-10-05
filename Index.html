@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UBC Loggersports — Practice Comp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@700;900&family=Source+Serif+4:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#002145;
+    --paper:#F3EEE1;
+    --moss:#0055B7;
+    --moss-deep:#013A72;
+    --gold:#FFC72C;
+    --bark:#6E5440;
+    --line: rgba(0,33,69,0.14);
+    --display:'Big Shoulders', sans-serif;
+    --serif:'Source Serif 4', Georgia, serif;
+    --mono:'Space Mono', monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif); }
+  .wrap{ max-width:720px; margin:0 auto; padding:28px 20px 60px; }
+
+  h1{ font-family:var(--display); font-weight:900; text-transform:uppercase; font-size:2rem; line-height:1; margin:0 0 4px; }
+  .sub{ font-family:var(--mono); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:var(--bark); margin-bottom:24px; display:block; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:20px; margin-bottom:20px; }
+  .card h2{ font-family:var(--display); font-weight:700; text-transform:uppercase; font-size:1.15rem; margin:0 0 14px; }
+
+  label{ font-family:var(--mono); font-size:.72rem; letter-spacing:.06em; text-transform:uppercase; color:var(--bark); display:block; margin-bottom:6px; }
+  input[type=text], input[type=number], input[type=password]{
+    width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:6px;
+    font-family:var(--serif); font-size:.95rem; margin-bottom:14px; background:var(--paper);
+  }
+  input:focus{ outline:2px solid var(--moss); outline-offset:1px; }
+
+  .events-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px; }
+  .ev-check{ display:flex; align-items:center; gap:8px; font-size:.9rem; padding:8px 10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); }
+  .ev-check input{ width:auto; margin:0; }
+
+  button{
+    font-family:var(--mono); font-size:.78rem; letter-spacing:.06em; text-transform:uppercase;
+    padding:11px 20px; border-radius:6px; border:1px solid var(--ink); background:var(--ink); color:var(--paper);
+    cursor:pointer;
+  }
+  button.secondary{ background:transparent; color:var(--ink); }
+  button.gold{ background:var(--gold); color:var(--ink); border-color:var(--gold); font-weight:700; }
+  button.danger{ background:#a32d2d; border-color:#a32d2d; }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+
+  .toprow{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .exec-badge{ font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; background:var(--gold); color:var(--ink); padding:5px 10px; border-radius:20px; }
+
+  table{ width:100%; border-collapse:collapse; font-size:.88rem; }
+  th{ text-align:left; font-family:var(--mono); font-size:.66rem; letter-spacing:.06em; text-transform:uppercase; color:var(--bark); border-bottom:1px solid var(--line); padding:6px 8px 6px 0; }
+  td{ padding:8px 8px 8px 0; border-bottom:1px solid var(--line); }
+  .rank1{ color:var(--moss); font-weight:700; }
+  .score-input{ width:80px; padding:6px 8px; margin:0; }
+
+  .msg{ font-size:.85rem; padding:10px 12px; border-radius:6px; margin-bottom:14px; }
+  .msg.err{ background:#fcebeb; color:#791f1f; }
+  .msg.ok{ background:#eaf3de; color:#27500a; }
+  .empty{ color:var(--bark); font-size:.88rem; font-style:italic; }
+  .loading{ font-family:var(--mono); font-size:.8rem; color:var(--bark); }
+
+  .event-block{ margin-bottom:22px; }
+  .event-block h3{ font-family:var(--display); font-weight:700; text-transform:uppercase; font-size:1.02rem; margin:0 0 8px; }
+  .score-row{ display:flex; align-items:center; gap:10px; padding:6px 0; border-bottom:1px solid var(--line); font-size:.9rem; }
+  .score-row .name{ flex:1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="toprow">
+    <div>
+      <h1>Practice Comp</h1>
+      <span class="sub" id="compSub">Loading...</span>
+    </div>
+    <div id="execBadgeSlot"></div>
+  </div>
+
+  <div id="msgSlot"></div>
+
+  <div class="card" id="execGateCard">
+    <h2>Exec access</h2>
+    <p style="font-size:.85rem; color:var(--bark); margin:0 0 12px;">Members: skip this, just check in below. Execs: enter the PIN to set up a comp and enter scores.</p>
+    <label for="pinInput">Exec PIN</label>
+    <input type="password" id="pinInput" placeholder="Enter PIN">
+    <button id="pinBtn">Unlock exec mode</button>
+  </div>
+
+  <div class="card" id="setupCard" style="display:none;">
+    <h2>Comp setup (exec)</h2>
+    <label for="compTitle">Comp title</label>
+    <input type="text" id="compTitle" placeholder="e.g. October Practice Comp">
+    <label>Active events</label>
+    <div class="events-grid" id="eventCheckboxes"></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="gold" id="startCompBtn">Start / update comp</button>
+      <button class="danger" id="resetCompBtn">Reset comp (clears check-ins &amp; scores)</button>
+      <button class="secondary" id="lockBtn">Lock exec mode</button>
+    </div>
+  </div>
+
+  <div class="card" id="checkinCard">
+    <h2>Check in</h2>
+    <div id="checkinForm">
+      <label for="nameInput">Your name</label>
+      <input type="text" id="nameInput" placeholder="First and last name">
+      <label>Events you're doing today</label>
+      <div class="events-grid" id="checkinEvents"></div>
+      <button id="checkinBtn">Check in</button>
+    </div>
+  </div>
+
+  <div class="card" id="rosterCard">
+    <h2>Checked in</h2>
+    <div id="rosterList" class="loading">Loading...</div>
+  </div>
+
+  <div class="card" id="scoreboardCard">
+    <h2>Scoreboard</h2>
+    <div id="scoreboardList" class="loading">Loading...</div>
+  </div>
+
+</div>
+
+<script>
+const EXEC_PIN = "2547";
+let execMode = false;
+let comp = { title:"", events:[], directions:{} };
+let checkins = [];
+let scores = {};
+
+function showMsg(text, type){
+  const slot = document.getElementById('msgSlot');
+  slot.innerHTML = '<div class="msg ' + type + '">' + text + '</div>';
+  setTimeout(()=>{ slot.innerHTML = ''; }, 4000);
+}
+
+async function loadAll(){
+  try{
+    const c = await window.storage.get('comp:current', true);
+    comp = c ? JSON.parse(c.value) : { title:"Untitled comp", events:[], directions:{} };
+  }catch(e){ comp = { title:"Untitled comp", events:[], directions:{} }; }
+  try{
+    const ci = await window.storage.get('comp:checkins', true);
+    checkins = ci ? JSON.parse(ci.value) : [];
+  }catch(e){ checkins = []; }
+  try{
+    const sc = await window.storage.get('comp:scores', true);
+    scores = sc ? JSON.parse(sc.value) : {};
+  }catch(e){ scores = {}; }
+  render();
+}
+
+async function saveComp(){
+  await window.storage.set('comp:current', JSON.stringify(comp), true);
+}
+async function saveCheckins(){
+  await window.storage.set('comp:checkins', JSON.stringify(checkins), true);
+}
+async function saveScores(){
+  await window.storage.set('comp:scores', JSON.stringify(scores), true);
+}
+
+const ALL_EVENTS = ["Underhand Chop","Pole Climb","Stock Saw","Axe Throwing","Single Buck","Double Buck","Jack & Jill","Obstacle Pole","Choker Race","Speed Axe Throw","Vertical Chop"];
+
+function render(){
+  document.getElementById('compSub').textContent = comp.title ? comp.title + (comp.events.length ? ' · ' + comp.events.length + ' events' : '') : 'No active comp set up yet';
+  document.getElementById('execBadgeSlot').innerHTML = execMode ? '<span class="exec-badge">Exec mode</span>' : '';
+  document.getElementById('setupCard').style.display = execMode ? 'block' : 'none';
+  document.getElementById('execGateCard').style.display = execMode ? 'none' : 'block';
+
+  if(execMode){
+    document.getElementById('compTitle').value = comp.title || '';
+    const grid = document.getElementById('eventCheckboxes');
+    grid.innerHTML = ALL_EVENTS.map(ev => {
+      const checked = comp.events.includes(ev) ? 'checked' : '';
+      const id = 'setup_' + ev.replace(/[^a-z0-9]/gi,'');
+      return '<label class="ev-check"><input type="checkbox" id="'+id+'" value="'+ev+'" '+checked+'> '+ev+'</label>';
+    }).join('');
+  }
+
+  const checkinGrid = document.getElementById('checkinEvents');
+  if(comp.events.length === 0){
+    checkinGrid.innerHTML = '<p class="empty">No comp set up yet — check back once an exec starts one.</p>';
+    document.getElementById('checkinBtn').disabled = true;
+  }else{
+    document.getElementById('checkinBtn').disabled = false;
+    checkinGrid.innerHTML = comp.events.map(ev => {
+      const id = 'ci_' + ev.replace(/[^a-z0-9]/gi,'');
+      return '<label class="ev-check"><input type="checkbox" id="'+id+'" value="'+ev+'"> '+ev+'</label>';
+    }).join('');
+  }
+
+  const rosterEl = document.getElementById('rosterList');
+  if(checkins.length === 0){
+    rosterEl.innerHTML = '<p class="empty">No one checked in yet.</p>';
+  }else{
+    rosterEl.innerHTML = '<table><tr><th>Name</th><th>Events</th></tr>' +
+      checkins.map(c => '<tr><td>'+escapeHtml(c.name)+'</td><td>'+c.events.map(escapeHtml).join(', ')+'</td></tr>').join('') +
+      '</table>';
+  }
+
+  renderScoreboard();
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+function renderScoreboard(){
+  const el = document.getElementById('scoreboardList');
+  if(comp.events.length === 0){
+    el.innerHTML = '<p class="empty">Nothing to show yet.</p>';
+    return;
+  }
+  let html = '';
+  const overallPoints = {};
+
+  comp.events.forEach(ev => {
+    const participants = checkins.filter(c => c.events.includes(ev));
+    if(participants.length === 0) return;
+
+    const dir = (comp.directions && comp.directions[ev]) || 'desc';
+    const evScores = scores[ev] || {};
+
+    const rows = participants.map(p => ({
+      id: p.id, name: p.name, score: evScores[p.id]
+    }));
+
+    const scored = rows.filter(r => r.score !== undefined && r.score !== null && r.score !== '');
+    scored.sort((a,b) => dir === 'asc' ? a.score - b.score : b.score - a.score);
+    const unscored = rows.filter(r => !(r.score !== undefined && r.score !== null && r.score !== ''));
+
+    const pointsForRank = [10,8,6,5,4,3,2,1];
+    scored.forEach((r, i) => {
+      const pts = pointsForRank[i] || 0;
+      overallPoints[r.name] = (overallPoints[r.name] || 0) + pts;
+    });
+
+    html += '<div class="event-block"><h3>'+escapeHtml(ev)+' <span style="font-family:var(--mono); font-size:.65rem; color:var(--bark); text-transform:uppercase;">('+(dir==='asc' ? 'lowest wins' : 'highest wins')+')</span></h3>';
+
+    scored.forEach((r,i) => {
+      html += '<div class="score-row"><span class="name '+(i===0?'rank1':'')+'">'+(i+1)+'. '+escapeHtml(r.name)+'</span>';
+      if(execMode){
+        html += '<input type="number" step="0.01" class="score-input" data-event="'+encodeURIComponent(ev)+'" data-id="'+r.id+'" value="'+r.score+'">';
+      }else{
+        html += '<span style="font-family:var(--mono);">'+r.score+'</span>';
+      }
+      html += '</div>';
+    });
+    unscored.forEach(r => {
+      html += '<div class="score-row"><span class="name">'+escapeHtml(r.name)+'</span>';
+      if(execMode){
+        html += '<input type="number" step="0.01" class="score-input" placeholder="score" data-event="'+encodeURIComponent(ev)+'" data-id="'+r.id+'" value="">';
+      }else{
+        html += '<span style="color:var(--bark); font-family:var(--mono); font-size:.8rem;">pending</span>';
+      }
+      html += '</div>';
+    });
+
+    if(execMode){
+      html += '<div style="margin-top:8px; display:flex; gap:8px; align-items:center;">' +
+        '<label style="margin:0;">Sort:</label>' +
+        '<select class="dir-select" data-event="'+encodeURIComponent(ev)+'" style="font-family:var(--mono); font-size:.72rem; padding:4px;">' +
+        '<option value="desc" '+(dir==='desc'?'selected':'')+'>Highest wins</option>' +
+        '<option value="asc" '+(dir==='asc'?'selected':'')+'>Lowest wins (time)</option>' +
+        '</select></div>';
+    }
+
+    html += '</div>';
+  });
+
+  const overallList = Object.entries(overallPoints).sort((a,b)=>b[1]-a[1]);
+  if(overallList.length){
+    html += '<div class="event-block"><h3 style="color:var(--moss);">Overall standings</h3><table><tr><th>Name</th><th>Points</th></tr>' +
+      overallList.map(([name,pts],i) => '<tr><td class="'+(i===0?'rank1':'')+'">'+escapeHtml(name)+'</td><td>'+pts+'</td></tr>').join('') +
+      '</table></div>';
+  }
+
+  el.innerHTML = html || '<p class="empty">No one has checked in for the active events yet.</p>';
+
+  if(execMode){
+    document.querySelectorAll('.score-input').forEach(inp => {
+      inp.addEventListener('change', async (e) => {
+        const ev = decodeURIComponent(e.target.dataset.event);
+        const id = e.target.dataset.id;
+        const val = e.target.value === '' ? null : parseFloat(e.target.value);
+        if(!scores[ev]) scores[ev] = {};
+        scores[ev][id] = val;
+        await saveScores();
+        renderScoreboard();
+      });
+    });
+    document.querySelectorAll('.dir-select').forEach(sel => {
+      sel.addEventListener('change', async (e) => {
+        const ev = decodeURIComponent(e.target.dataset.event);
+        if(!comp.directions) comp.directions = {};
+        comp.directions[ev] = e.target.value;
+        await saveComp();
+        renderScoreboard();
+      });
+    });
+  }
+}
+
+document.getElementById('pinBtn').addEventListener('click', () => {
+  const val = document.getElementById('pinInput').value;
+  if(val === EXEC_PIN){
+    execMode = true;
+    document.getElementById('pinInput').value = '';
+    showMsg('Exec mode unlocked.', 'ok');
+    render();
+  }else{
+    showMsg('Wrong PIN.', 'err');
+  }
+});
+
+document.getElementById('lockBtn').addEventListener('click', () => {
+  execMode = false;
+  render();
+});
+
+document.getElementById('startCompBtn').addEventListener('click', async () => {
+  const title = document.getElementById('compTitle').value.trim();
+  if(!title){
+    showMsg('Enter a comp title first.', 'err');
+    return;
+  }
+  const checked = Array.from(document.querySelectorAll('#eventCheckboxes input:checked')).map(i => i.value);
+  if(checked.length === 0){
+    showMsg('Select at least one event.', 'err');
+    return;
+  }
+  comp.title = title;
+  comp.events = checked;
+  if(!comp.directions) comp.directions = {};
+  checked.forEach(ev => { if(!comp.directions[ev]) comp.directions[ev] = 'desc'; });
+  await saveComp();
+  showMsg('Comp updated.', 'ok');
+  render();
+});
+
+document.getElementById('resetCompBtn').addEventListener('click', async () => {
+  checkins = [];
+  scores = {};
+  await saveCheckins();
+  await saveScores();
+  showMsg('Check-ins and scores cleared.', 'ok');
+  render();
+});
+
+document.getElementById('checkinBtn').addEventListener('click', async () => {
+  const name = document.getElementById('nameInput').value.trim();
+  if(!name){
+    showMsg('Enter your name first.', 'err');
+    return;
+  }
+  const checked = Array.from(document.querySelectorAll('#checkinEvents input:checked')).map(i => i.value);
+  if(checked.length === 0){
+    showMsg('Pick at least one event.', 'err');
+    return;
+  }
+  const id = Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+  checkins.push({ id, name, events: checked });
+  await saveCheckins();
+  document.getElementById('nameInput').value = '';
+  document.querySelectorAll('#checkinEvents input:checked').forEach(i => i.checked = false);
+  showMsg('Checked in! Good luck out there.', 'ok');
+  render();
+});
+
+loadAll();
+</script>
+</body>
+</html>
