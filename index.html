@@ -4,7 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#002145">
-<title>UBC Loggersports — Practice Comp</title>
+<title>UBC Loggersports &#8212; Practice Comp</title>
+<!-- PASTE YOUR WEB APP URL (ends in /exec) BETWEEN THE QUOTES ON THE NEXT LINE. Nothing else in this file needs editing. -->
+<meta name="backend-url" content="https://script.google.com/macros/s/AKfycbzZkqOrrRcEm2eMBwIPWsDKPdjI5vneDcVP5j9GwbZnoN1kKHca0aoe25PvI47McKUE/exec">
+<script>
+/* Boot guard: if the page script fails to start, say so on screen instead of silently doing nothing. */
+(function () {
+  var pc = window.__pc = { ready: false, errors: [] };
+  function banner() {
+    if (!document.body) return;
+    var b = document.getElementById('bootBanner');
+    if (!b) {
+      b = document.createElement('div'); b.id = 'bootBanner';
+      b.style.cssText = 'background:#fcebeb;color:#791f1f;border-bottom:3px solid #c0392b;padding:12px 16px;font:15px/1.4 Georgia,serif;position:relative;z-index:99';
+      document.body.insertBefore(b, document.body.firstChild);
+    }
+    b.textContent = pc.ready
+      ? 'A part of this page hit an error: ' + pc.errors[pc.errors.length - 1]
+      : "This page's script did not start, so buttons will not work. " + (pc.errors.length ? 'Error: ' + pc.errors[pc.errors.length - 1] + '. ' : 'The file may be cut off or edited incorrectly. ') + 'Re-upload the original file and only change the backend-url line near the top.';
+  }
+  window.addEventListener('error', function (e) { pc.errors.push((e && e.message) || 'unknown error'); banner(); });
+  window.addEventListener('unhandledrejection', function (e) { pc.errors.push(String((e && e.reason && e.reason.message) || (e && e.reason) || 'unknown error')); banner(); });
+  window.addEventListener('load', function () { setTimeout(function () { if (!pc.ready) banner(); }, 400); });
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@700;900&family=Source+Serif+4:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -51,7 +74,7 @@
   /* division colour coding: Women's = gold, Open = blue, Mixed = green */
   .chip{ display:inline-block; font-family:var(--mono); font-weight:700; font-size:.62rem; letter-spacing:.05em; text-transform:uppercase; padding:2px 8px; border-radius:10px; vertical-align:middle; }
   .chip.W{ background:var(--gold); color:var(--ink); } .chip.O{ background:var(--blue); color:#fff; }
-  .chip.X{ background:var(--green); color:#fff; }       .chip.A{ background:#d9d4c3; color:var(--ink); }
+  .chip.X{ background:var(--green); color:#fff; }       .chip.A{ background:var(--blue); color:#fff; }
   .dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:baseline; }
   .dot.W{ background:var(--gold); box-shadow:0 0 0 1px var(--ink); } .dot.O{ background:var(--blue); }
   .tag{ font-family:var(--mono); font-size:.62rem; letter-spacing:.05em; text-transform:uppercase; color:var(--bark); font-weight:400; }
@@ -68,6 +91,8 @@
   .ev-check{ display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:.92rem; text-transform:none; letter-spacing:0; color:var(--ink); padding:9px 10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); margin:0; }
   .ev-check input{ width:auto; margin:0; }
   .ev-check .tag{ margin-left:auto; }
+  .ev-check select.cls-pick{ width:auto; margin:0 0 0 auto; padding:3px 6px; font-size:.78rem; }
+  .opentag{ font-family:var(--mono); font-size:.6rem; letter-spacing:.05em; text-transform:uppercase; background:var(--blue); color:#fff; border-radius:8px; padding:1px 6px; margin-left:4px; }
 
   /* roster */
   .filters{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
@@ -147,7 +172,7 @@
   <div class="toprow">
     <div>
       <h1>Practice Comp</h1>
-      <span class="sub" id="compSub">Loading…</span>
+      <span class="sub" id="compSub">Loading&#8230;</span>
     </div>
     <div id="statusSlot"></div>
   </div>
@@ -169,6 +194,7 @@
         <label class="segopt W"><input type="radio" name="div" value="W"><span>Women's</span></label>
         <label class="segopt O"><input type="radio" name="div" value="O"><span>Open</span></label>
       </div>
+      <p class="hint" id="divHint" style="margin:-4px 0 12px"></p>
       <label>Events you're doing today</label>
       <div class="events-grid" id="checkinEvents"></div>
       <button id="checkinBtn" data-act="checkin">Check in</button>
@@ -181,13 +207,13 @@
         <button data-act="filter" data-v="W">Women's</button>
         <button data-act="filter" data-v="O">Open</button>
       </div>
-      <div id="rosterList" class="loading">Loading…</div>
+      <div id="rosterList" class="loading">Loading&#8230;</div>
     </div>
 
     <div class="card" id="scoreboardCard">
       <h2>Scoreboard</h2>
       <input type="search" id="searchInput" placeholder="Search your name to see your results" autocomplete="off">
-      <div id="scoreboardList" class="loading">Loading…</div>
+      <div id="scoreboardList" class="loading">Loading&#8230;</div>
     </div>
 
     <!-- Exec sign-in lives at the bottom of the page -->
@@ -207,7 +233,7 @@
         <label for="compDate">Date</label>
         <input type="date" id="compDate">
         <label>Events</label>
-        <p class="hint">Tick the events in this comp. By default Women's and Open are scored separately; untick that to put everyone on one board.</p>
+        <p class="hint">Tick the events in this comp. By default each event has a Women's board and an Open board (women can enter either; Open means anyone can join). Tick "Open only" for an event with a single board for everyone. Lowest time wins everywhere except Axe Throwing.</p>
         <div id="eventSetup"></div>
         <div class="btnrow"><button class="gold" data-act="startComp">Start / update comp</button></div>
       </div>
@@ -234,7 +260,7 @@
     <div class="card">
       <h2>Past comps</h2>
       <input type="search" id="archiveSearch" placeholder="Search a name to see all their results" autocomplete="off">
-      <div id="archiveBody" class="loading">Loading…</div>
+      <div id="archiveBody" class="loading">Loading&#8230;</div>
       <div class="btnrow"><button class="small secondary" data-act="reloadArchive">Refresh</button></div>
     </div>
   </section>
@@ -247,10 +273,15 @@
    SETUP: paste your Google Apps Script web app URL below (ends in /exec).
    The exec PIN lives in the Apps Script, never in this file.
    ======================================================================== */
-var SCRIPT_URL = https://script.google.com/macros/s/AKfycbxSiZm9xnV3Ie9BUAry_Px9x0aZlYxxtwhDY6WGWCUvEZdZlMpoE2RA2xIRBDJLnqYN/exec;
+var SCRIPT_URL = (function () {
+  var m = document.querySelector('meta[name="backend-url"]');
+  var raw = m ? String(m.getAttribute('content') || '') : '';
+  var hit = raw.match(/https:\/\/script\.google\.com\/[^\s"'<>]+/);   // forgiving: ignores stray quotes or spaces around the pasted URL
+  return hit ? hit[0] : '';
+})();
 
 /* ===== SHARED RULES + SCORING (identical in the page and the Sheet script) ===== */
-var CAT_LABEL = { W: "Women's", O: 'Open', X: 'Mixed', A: 'All' };
+var CAT_LABEL = { W: "Women's", O: 'Open', X: 'Mixed', A: 'Open' };   // A = a single board that anyone can enter
 var POINTS = [10, 8, 6, 5, 4, 3, 2, 1];          // points for 1st..8th; everyone below gets 0
 var GROUP_ORDER = ['W', 'O', 'X', 'A'];
 
@@ -294,29 +325,42 @@ function isMixedOnly(ev) {
   return ev.type === 'team' && ev.allowed.length === 1 && ev.allowed[0] === 'X';
 }
 
-// Accepts the old format (events as plain strings + a directions map) as well as the new one.
+// Accepts the old format (events as plain strings) as well as the new one.
+// Old saved "directions" are deliberately ignored so every event gets its sensible default
+// (lowest time wins, except Axe Throwing where the highest score wins).
 function normalizeComp(c) {
   c = c || {};
   var events = [];
   (c.events || []).forEach(function (e) {
-    var ev = typeof e === 'string' ? mkEvent(e, true, (c.directions || {})[e]) : (e ? mkEvent(e.name, e.split, e.dir) : null);
+    var ev = typeof e === 'string' ? mkEvent(e, true) : (e ? mkEvent(e.name, e.split, e.dir) : null);
     if (ev) events.push(ev);
   });
   return { id: c.id || '', title: c.title || '', date: c.date || '', events: events };
 }
 
 function divOf(p) { return p && p.div === 'W' ? 'W' : 'O'; }
+// Which board a person is on for one event.
+// Women's-division people are on the Women's board unless they chose to enter Open for that event
+// (p.open = list of event names). Mixed-only events always use the person's own division.
+function classOf(p, ev) {
+  if (divOf(p) !== 'W') return 'O';
+  if (!ev || !ev.split || isMixedOnly(ev)) return 'W';
+  return (p.open && p.open.indexOf(ev.name) !== -1) ? 'O' : 'W';
+}
+// Can this person choose the Open board for this event? (Women's-division people, on events that have a Women's board.)
+function canChooseOpen(p, ev) {
+  return divOf(p) === 'W' && !!ev && ev.split && !isMixedOnly(ev);
+}
 function normName(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 function catOf(divA, divB) { return divA === divB ? divA : 'X'; }
 function groupLabel(ev, key) {
-  if (key === 'A') return ev.type === 'team' ? 'All teams' : 'Everyone';
   return CAT_LABEL[key];
 }
 
 function pairProblem(ev, a, b) {
   if (!ev || ev.type !== 'team') return 'That is not a team event.';
   if (!a || !b || a.id === b.id) return 'Pick two different people.';
-  if (ev.allowed.indexOf(catOf(divOf(a), divOf(b))) === -1) {
+  if (ev.allowed.indexOf(catOf(classOf(a, ev), classOf(b, ev))) === -1) {
     return isMixedOnly(ev)
       ? "This event is mixed pairs only (one Women's, one Open)."
       : "That pairing isn't allowed for this event.";
@@ -326,8 +370,8 @@ function pairProblem(ev, a, b) {
 
 // Suggest pairs for people still unpaired: same division first, then mixed leftovers if allowed.
 function autoPairPlan(ev, people) {
-  var W = people.filter(function (p) { return divOf(p) === 'W'; });
-  var O = people.filter(function (p) { return divOf(p) !== 'W'; });
+  var W = people.filter(function (p) { return classOf(p, ev) === 'W'; });
+  var O = people.filter(function (p) { return classOf(p, ev) !== 'W'; });
   var okW = ev.allowed.indexOf('W') !== -1, okO = ev.allowed.indexOf('O') !== -1, okX = ev.allowed.indexOf('X') !== -1;
   var pairs = [];
   if (okW) while (W.length >= 2) pairs.push([W.shift(), W.shift()]);
@@ -362,11 +406,11 @@ function computeStandings(comp, checkins, teams, scores) {
       ((teams && teams[ev.name]) || []).forEach(function (t) {
         var a = byId[t.a], b = byId[t.b];
         if (!a || !b) return;
-        entities.push({ id: t.id, members: [a.id, b.id], names: [a.name, b.name], divs: [divOf(a), divOf(b)], cat: catOf(divOf(a), divOf(b)) });
+        entities.push({ id: t.id, members: [a.id, b.id], names: [a.name, b.name], divs: [divOf(a), divOf(b)], cat: catOf(classOf(a, ev), classOf(b, ev)) });
       });
     } else {
       checkins.forEach(function (c) {
-        if (c.events.indexOf(ev.name) !== -1) entities.push({ id: c.id, members: [c.id], names: [c.name], divs: [divOf(c)], cat: divOf(c) });
+        if (c.events.indexOf(ev.name) !== -1) entities.push({ id: c.id, members: [c.id], names: [c.name], divs: [divOf(c)], cat: classOf(c, ev) });
       });
     }
     var map = {};
@@ -401,9 +445,8 @@ function computeStandings(comp, checkins, teams, scores) {
   return {
     events: events,
     overall: {
-      combined: rankBoard(clone(people)),
-      women: rankBoard(clone(people.filter(function (p) { return p.div === 'W'; }))),
-      open: rankBoard(clone(people.filter(function (p) { return p.div === 'O'; })))
+      open: rankBoard(clone(people)),      // Open means anyone can join, so this board is everyone
+      women: rankBoard(clone(people.filter(function (p) { return p.div === 'W'; })))
     }
   };
 }
@@ -447,19 +490,19 @@ var WOMENS = "Women's";
 var comp = normalizeComp({}), checkins = [], teams = {}, scores = {};
 var execMode = false, execPin = null, tab = 'today';
 var rosterFilter = 'ALL', expandedPeople = {}, expandedGroups = {};
-var overallTab = 'combined', overallExpanded = false;
-var pairSel = null, archive = null, archiveLoading = false;
+var overallTab = 'open', overallExpanded = false;
+var pairSel = null, archive = null, archiveLoading = false, openPick = {};
 var busy = 0, seq = 0, lastApplied = 0, setupDirty = false, sending = false;
 
 function $(id) { return document.getElementById(id); }
 function esc(s) { return String(s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
-function configured() { return SCRIPT_URL.indexOf('https://script.google.com/') === 0; }
+function configured() { return SCRIPT_URL !== ''; }
 function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 function todayStr() { var d = new Date(), m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day; }
 function range(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
 function chip(key) { return '<span class="chip ' + key + '">' + esc(CAT_LABEL[key]) + '</span>'; }
-function allowedText(ev) { return isMixedOnly(ev) ? 'Mixed pairs only' : ev.allowed.map(function (k) { return CAT_LABEL[k]; }).join(' · '); }
+function allowedText(ev) { return isMixedOnly(ev) ? 'Mixed pairs only' : ev.allowed.map(function (k) { return CAT_LABEL[k]; }).join(' \u00b7 '); }
 
 var msgTimer = null;
 function showMsg(text, type) {
@@ -471,7 +514,7 @@ function setBusy(d) {
   busy += d;
   var parts = [];
   if (execMode) parts.push('<span class="pill exec">Exec mode</span>');
-  if (busy > 0) parts.push('<span class="pill busy">Saving…</span>');
+  if (busy > 0) parts.push('<span class="pill busy">Saving\u2026</span>');
   $('statusSlot').innerHTML = parts.join(' ');
 }
 
@@ -489,7 +532,7 @@ async function apiPost(body) {
 }
 function applyState(s) {
   comp = normalizeComp(s.comp);
-  checkins = (s.checkins || []).map(function (c) { return { id: c.id, name: c.name, div: c.div === 'W' ? 'W' : 'O', events: c.events || [] }; });
+  checkins = (s.checkins || []).map(function (c) { return { id: c.id, name: c.name, div: c.div === 'W' ? 'W' : 'O', events: c.events || [], open: c.open || [] }; });
   teams = s.teams || {};
   scores = s.scores || {};
 }
@@ -552,7 +595,7 @@ function topCut(places, limit) {            // places = ranks of already-sorted 
 function rowsWithGaps(idxs, renderFn) {
   var html = '', prev = null;
   idxs.forEach(function (i) {
-    if (prev !== null && i !== prev + 1) html += '<div class="gap">⋯</div>';
+    if (prev !== null && i !== prev + 1) html += '<div class="gap">\u22ef</div>';
     html += renderFn(i);
     prev = i;
   });
@@ -561,7 +604,7 @@ function rowsWithGaps(idxs, renderFn) {
 
 /* ---------------- render: top-level ---------------- */
 function renderAll() {
-  $('compSub').textContent = comp.title ? comp.title + (comp.date ? ' · ' + comp.date : '') : 'No active comp';
+  $('compSub').textContent = comp.title ? comp.title + (comp.date ? ' \u00b7 ' + comp.date : '') : 'No active comp';
   setBusy(0);
   $('tab-today').classList.toggle('hidden', tab !== 'today');
   $('tab-past').classList.toggle('hidden', tab !== 'past');
@@ -579,7 +622,9 @@ function renderAll() {
 function renderCheckinEvents() {
   var grid = $('checkinEvents'), btn = $('checkinBtn');
   var prev = {};
-  Array.prototype.forEach.call(grid.querySelectorAll('input:checked'), function (i) { prev[i.value] = true; });
+  Array.prototype.forEach.call(grid.querySelectorAll('input[type=checkbox]:checked'), function (i) { prev[i.value] = true; });
+  var dsel = document.querySelector('input[name=div]:checked'), isW = !!dsel && dsel.value === 'W';
+  $('divHint').textContent = isW ? "Women's competitors can enter any event on the Women's board or the Open board. Pick per event below." : (dsel ? 'Open is open to everyone.' : '');
   if (!comp.title || !comp.events.length) {
     grid.innerHTML = '<p class="empty">No comp is set up yet. Check back once an exec starts one.</p>';
     btn.disabled = true;
@@ -587,8 +632,12 @@ function renderCheckinEvents() {
   }
   btn.disabled = sending;
   grid.innerHTML = comp.events.map(function (ev) {
+    var choose = isW && canChooseOpen({ div: 'W' }, ev) && prev[ev.name];
     return '<label class="ev-check"><input type="checkbox" value="' + esc(ev.name) + '"' + (prev[ev.name] ? ' checked' : '') + '> ' + esc(ev.name) +
-      (ev.type === 'team' ? '<span class="tag">pairs</span>' : '') + '</label>';
+      (ev.type === 'team' ? '<span class="tag">pairs</span>' : '') +
+      (!ev.split && !isMixedOnly(ev) ? '<span class="tag">open to all</span>' : '') +
+      (choose ? '<select class="cls-pick" data-ev="' + esc(ev.name) + '" aria-label="Board for ' + esc(ev.name) + '"><option value="W"' + (openPick[ev.name] ? '' : ' selected') + '>' + WOMENS + '</option><option value="O"' + (openPick[ev.name] ? ' selected' : '') + '>Open</option></select>' : '') +
+      '</label>';
   }).join('');
 }
 
@@ -610,10 +659,16 @@ function renderRoster() {
     var open = !!expandedPeople[c.id];
     var evs = c.events.filter(function (n) { return inComp[n]; });
     var h = '<div class="person ' + c.div + '"><button class="person-head" data-act="togglePerson" data-id="' + esc(c.id) + '" aria-expanded="' + open + '">' +
-      chip(c.div) + '<span class="pname">' + esc(c.name) + '</span><span class="pcount">' + evs.length + (evs.length === 1 ? ' event' : ' events') + '</span><span>' + (open ? '▾' : '▸') + '</span></button>';
+      chip(c.div) + '<span class="pname">' + esc(c.name) + '</span><span class="pcount">' + evs.length + (evs.length === 1 ? ' event' : ' events') + '</span><span>' + (open ? '\u25be' : '\u25b8') + '</span></button>';
     if (open) {
-      h += '<div class="person-body">' + (evs.length ? evs.map(function (n) { return '<span class="evtag">' + esc(n) + '</span>'; }).join('') : '<span class="empty">No events</span>');
+      h += '<div class="person-body">' + (evs.length ? evs.map(function (n) { return '<span class="evtag">' + esc(n) + (c.open.indexOf(n) !== -1 ? '<span class="opentag">Open</span>' : '') + '</span>'; }).join('') : '<span class="empty">No events</span>');
       if (execMode) {
+        comp.events.forEach(function (ev) {
+          if (c.events.indexOf(ev.name) !== -1 && canChooseOpen(c, ev)) {
+            var isOpen = c.open.indexOf(ev.name) !== -1;
+            h += '<div class="btnrow"><span class="tag">' + esc(ev.name) + ': ' + (isOpen ? 'Open board' : "Women's board") + '</span><button class="small secondary" data-act="setOpen" data-id="' + esc(c.id) + '" data-event="' + esc(ev.name) + '" data-open="' + (isOpen ? '0' : '1') + '">Switch to ' + (isOpen ? WOMENS : 'Open') + '</button></div>';
+          }
+        });
         h += '<div class="btnrow"><button class="small secondary" data-act="setDiv" data-id="' + esc(c.id) + '" data-div="' + (c.div === 'W' ? 'O' : 'W') + '">Move to ' + (c.div === 'W' ? 'Open' : WOMENS) + '</button>' +
           '<button class="small danger-outline" data-act="removeCheckin" data-id="' + esc(c.id) + '">Remove</button></div>';
       }
@@ -634,7 +689,7 @@ function entryRow(ev, en, hit) {
     val = en.score === null ? '<span class="pending">pending</span>' : '<span>' + esc(fmtScore(en.score, ev.dir)) + '</span>';
   }
   if (en.place !== null) val += '<span class="pts">+' + en.points + '</span>';
-  return '<div class="row' + (hit ? ' hit' : '') + (en.place === 1 ? ' first' : '') + '"><span class="place">' + (en.place === null ? '–' : en.place) + '</span><span class="who">' + names + '</span><span class="val">' + val + '</span></div>';
+  return '<div class="row' + (hit ? ' hit' : '') + (en.place === 1 ? ' first' : '') + '"><span class="place">' + (en.place === null ? '\u2013' : en.place) + '</span><span class="who">' + names + '</span><span class="val">' + val + '</span></div>';
 }
 
 function renderGroup(ev, g, q) {
@@ -652,7 +707,7 @@ function renderGroup(ev, g, q) {
   }
   var h = '';
   if (g.key !== 'A') h += '<div class="ghead">' + chip(g.key) + '<span class="gcount">' + entries.length + (ev.type === 'team' ? (entries.length === 1 ? ' team' : ' teams') : (entries.length === 1 ? ' competitor' : ' competitors')) + '</span></div>';
-  if (!idxs.length) h += '<p class="empty small">No scores yet · ' + entries.length + ' entered</p>';
+  if (!idxs.length) h += '<p class="empty small">No scores yet \u00b7 ' + entries.length + ' entered</p>';
   h += rowsWithGaps(idxs, function (i) { return entryRow(ev, entries[i], !!hits[i]); });
   if (!q && !execMode) {
     if (!expandedGroups[key] && entries.length > idxs.length) h += '<button class="link" data-act="toggleGroup" data-key="' + esc(key) + '">Show all (' + entries.length + ')</button>';
@@ -662,8 +717,8 @@ function renderGroup(ev, g, q) {
 }
 
 function renderOverall(st, q) {
-  if (!st.overall.combined.length) return '';
-  var tabs = [['combined', 'Combined'], ['women', WOMENS], ['open', 'Open']];
+  if (!st.overall.open.length) return '';
+  var tabs = [['open', 'Open (everyone)'], ['women', WOMENS]];
   var list = st.overall[overallTab] || [];
   var h = '<div class="event-block"><h3>Overall standings</h3><div class="filters">' +
     tabs.map(function (t) { return '<button data-act="overallTab" data-v="' + t[0] + '"' + (t[0] === overallTab ? ' class="on"' : '') + '>' + esc(t[1]) + '</button>'; }).join('') + '</div>';
@@ -673,7 +728,7 @@ function renderOverall(st, q) {
   if (q) {
     var res = pickAround(list.length, function (i) { return normName(list[i].name).indexOf(q) !== -1; });
     idxs = res.idxs; hits = res.hits;
-    if (!idxs.length) return h + '<p class="empty small">No match in this list. Try another tab.</p></div>';
+    if (!idxs.length) return h + '<p class="empty small">No match in this list. Try the other tab.</p></div>';
   } else idxs = (execMode || overallExpanded) ? range(list.length) : range(topN);
   h += rowsWithGaps(idxs, function (i) {
     var p = list[i];
@@ -693,9 +748,9 @@ function renderScoreboard() {
     if (!ev.groups.length) return;
     var inner = '';
     ev.groups.forEach(function (g) { inner += renderGroup(ev, g, q); });
-    if (inner) html += '<div class="event-block"><h3>' + esc(ev.name) + ' <span class="tag">' + (ev.dir === 'asc' ? 'fastest wins' : 'highest wins') + '</span></h3>' + inner + '</div>';
+    if (inner) html += '<div class="event-block"><h3>' + esc(ev.name) + ' <span class="tag">' + (ev.dir === 'asc' ? 'fastest wins' : 'highest wins') + '</span>' + (!ev.split ? ' <span class="tag">open to all</span>' : '') + '</h3>' + inner + '</div>';
   });
-  var overallMatch = q && st.overall.combined.some(function (p) { return normName(p.name).indexOf(q) !== -1; });
+  var overallMatch = q && st.overall.open.some(function (p) { return normName(p.name).indexOf(q) !== -1; });
   if (!q || overallMatch) html += renderOverall(st, q);
   el.innerHTML = html || '<p class="empty">' + (q ? 'No one matches "' + esc(raw.trim()) + '".' : 'No one has checked in for these events yet.') + '</p>';
 }
@@ -707,11 +762,11 @@ function renderSetup() {
   var cur = {}; comp.events.forEach(function (e) { cur[e.name] = e; });
   $('eventSetup').innerHTML = EVENT_DEFS.map(function (d) {
     var c = cur[d.name], on = !!c, mixed = d.type === 'team' && d.allowed.length === 1 && d.allowed[0] === 'X';
-    var split = c ? c.split : true, dir = c ? c.dir : d.dir;
+    var openOnly = c ? !c.split : false, high = (c ? c.dir : d.dir) === 'desc';
     return '<div class="evset" data-ev="' + esc(d.name) + '"><label class="evname"><input type="checkbox" class="ev-on"' + (on ? ' checked' : '') + '> <b>' + esc(d.name) + '</b>' +
       (d.type === 'team' ? ' <span class="tag">pairs</span>' : '') + '</label><div class="evopts">' +
-      (mixed ? '<span class="tag">Mixed pairs only</span>' : '<label class="opt"><input type="checkbox" class="ev-split"' + (split ? ' checked' : '') + '> Score ' + WOMENS + ' &amp; Open separately</label>') +
-      '<select class="ev-dir" aria-label="Winner for ' + esc(d.name) + '"><option value="asc"' + (dir === 'asc' ? ' selected' : '') + '>Lowest wins (time)</option><option value="desc"' + (dir === 'desc' ? ' selected' : '') + '>Highest wins</option></select></div></div>';
+      (mixed ? '<span class="tag">Mixed pairs only</span>' : '<label class="opt"><input type="checkbox" class="ev-openonly"' + (openOnly ? ' checked' : '') + '> Open only (anyone can join, one board)</label>') +
+      '<label class="opt"><input type="checkbox" class="ev-high"' + (high ? ' checked' : '') + '> Highest score wins (not a time)</label></div></div>';
   }).join('');
   setupDirty = false;
 }
@@ -719,8 +774,8 @@ function readSetup() {
   var events = [];
   Array.prototype.forEach.call($('eventSetup').querySelectorAll('.evset'), function (row) {
     if (!row.querySelector('.ev-on').checked) return;
-    var sp = row.querySelector('.ev-split');
-    events.push({ name: row.dataset.ev, split: sp ? sp.checked : true, dir: row.querySelector('.ev-dir').value });
+    var oo = row.querySelector('.ev-openonly');
+    events.push({ name: row.dataset.ev, split: oo ? !oo.checked : true, dir: row.querySelector('.ev-high').checked ? 'desc' : 'asc' });
   });
   return { title: $('compTitle').value.trim(), date: $('compDate').value, events: events };
 }
@@ -729,7 +784,7 @@ function renderTeams() {
   var el = $('teamsBody'), tevs = comp.events.filter(function (e) { return e.type === 'team'; });
   if (!tevs.length) { el.innerHTML = '<p class="empty">No team events in this comp.</p>'; return; }
   var byId = {}; checkins.forEach(function (c) { byId[c.id] = c; });
-  var h = '<p class="hint">Tap one person, then another, to pair them. On a computer you can also drag one onto the other. Greyed-out names can\'t be paired with the selected person.</p>';
+  var h = '<p class="hint">Tap one person, then another, to pair them. A woman who chose Open for an event is paired as Open. On a computer you can also drag one onto the other. Greyed-out names can\'t be paired with the selected person.</p>';
   tevs.forEach(function (ev) {
     var list = teams[ev.name] || [], used = {};
     list.forEach(function (t) { used[t.a] = true; used[t.b] = true; });
@@ -740,7 +795,7 @@ function renderTeams() {
     list.forEach(function (t) {
       var a = byId[t.a], b = byId[t.b];
       if (!a || !b) return;
-      h += '<div class="team">' + chip(catOf(divOf(a), divOf(b))) + '<span class="tnames">' + esc(a.name) + ' <span class="amp">&amp;</span> ' + esc(b.name) + '</span>' +
+      h += '<div class="team">' + chip(catOf(classOf(a, ev), classOf(b, ev))) + '<span class="tnames">' + esc(a.name) + ' <span class="amp">&amp;</span> ' + esc(b.name) + '</span>' +
         '<button class="small secondary" data-act="unpair" data-event="' + esc(ev.name) + '" data-team="' + esc(t.id) + '">Unpair</button></div>';
     });
     if (!list.length) h += '<p class="empty small">No teams yet.</p>';
@@ -792,7 +847,7 @@ function compDetail(c, rows) {
     if (!list.length) return '';
     return '<h4>' + esc(title) + '</h4>' + limited(list.map(function (p) { return { place: p.rank, label: p.name, points: p.points }; }), 3);
   }
-  var h = board('Overall · Combined', arr) + board('Overall · ' + WOMENS, arr.filter(function (p) { return p.div === 'W'; })) + board('Overall · Open', arr.filter(function (p) { return p.div !== 'W'; }));
+  var h = board('Overall \u00b7 Open (everyone)', arr) + board('Overall \u00b7 ' + WOMENS, arr.filter(function (p) { return p.div === 'W'; }));
   var order = [], map = {};
   rows.forEach(function (r) { if (!map[r.event]) { map[r.event] = {}; order.push(r.event); } (map[r.event][r.group] = map[r.event][r.group] || []).push(r); });
   order.forEach(function (ev) {
@@ -800,7 +855,7 @@ function compDetail(c, rows) {
     var groups = Object.keys(map[ev]);
     groups.forEach(function (g) {
       var list = dedupeRows(map[ev][g].slice().sort(function (a, b) { return a.place - b.place || a.name.localeCompare(b.name); }));
-      if (groups.length > 1 || (g !== 'Everyone' && g !== 'All teams')) h += '<div class="ghead"><span class="tag">' + esc(g) + '</span></div>';
+      if (groups.length > 1) h += '<div class="ghead"><span class="tag">' + esc(g) + '</span></div>';
       h += limited(list, 3);
     });
   });
@@ -822,10 +877,10 @@ function renderPeopleSearch(q) {
       return da < db ? 1 : da > db ? -1 : a.event.localeCompare(b.event);
     });
     h += '<div class="person-results"><h3>' + chip(p.div) + ' ' + esc(p.name) + '</h3><p class="hint">' + p.rows.length + (p.rows.length === 1 ? ' result' : ' results') + ' in ' + Object.keys(ids).length +
-      (Object.keys(ids).length === 1 ? ' comp' : ' comps') + ' · ' + total + ' points</p><div class="tbl"><table><tr><th>Comp</th><th>Event</th><th>Place</th><th>Score</th><th>Pts</th></tr>' +
+      (Object.keys(ids).length === 1 ? ' comp' : ' comps') + ' \u00b7 ' + total + ' points</p><div class="tbl"><table><tr><th>Comp</th><th>Event</th><th>Place</th><th>Score</th><th>Pts</th></tr>' +
       p.rows.map(function (r) {
         var c = cm[r.compId] || { title: '', date: '' };
-        return '<tr><td>' + esc(c.date) + '<small>' + esc(c.title) + '</small></td><td>' + esc(r.event) + '<small>' + esc(r.group) + (r.partner ? ' · with ' + esc(r.partner) : '') + '</small></td><td>' + r.place +
+        return '<tr><td>' + esc(c.date) + '<small>' + esc(c.title) + '</small></td><td>' + esc(r.event) + '<small>' + esc(r.group) + (r.partner ? ' \u00b7 with ' + esc(r.partner) : '') + '</small></td><td>' + r.place +
           '</td><td>' + esc(fmtScore(r.score, r.dir)) + '</td><td>' + r.points + '</td></tr>';
       }).join('') + '</table></div></div>';
   });
@@ -834,7 +889,7 @@ function renderPeopleSearch(q) {
 }
 function renderArchive() {
   var el = $('archiveBody');
-  if (archiveLoading && !archive) { el.className = 'loading'; el.textContent = 'Loading…'; return; }
+  if (archiveLoading && !archive) { el.className = 'loading'; el.textContent = 'Loading\u2026'; return; }
   el.className = '';
   if (!archive) { el.innerHTML = '<p class="empty">Past comps could not be loaded. Tap Refresh to try again.</p>'; return; }
   var q = normName($('archiveSearch').value);
@@ -861,14 +916,16 @@ async function doCheckin() {
   if (!name) { showMsg('Enter your name first.', 'err'); return; }
   var d = document.querySelector('input[name=div]:checked');
   if (!d) { showMsg("Pick Women's or Open.", 'err'); return; }
-  var events = Array.prototype.map.call($('checkinEvents').querySelectorAll('input:checked'), function (i) { return i.value; });
+  var events = Array.prototype.map.call($('checkinEvents').querySelectorAll('input[type=checkbox]:checked'), function (i) { return i.value; });
   if (!events.length) { showMsg('Pick at least one event.', 'err'); return; }
   sending = true; $('checkinBtn').disabled = true;
-  var res = await send({ action: 'checkin', name: name, div: d.value, events: events }, function (r) { return r.updated ? 'Check-in updated.' : 'Checked in! Good luck out there.'; });
+  var openList = d.value === 'W' ? events.filter(function (n) { return openPick[n]; }) : [];
+  var res = await send({ action: 'checkin', name: name, div: d.value, events: events, open: openList }, function (r) { return r.updated ? 'Check-in updated.' : 'Checked in! Good luck out there.'; });
   sending = false;
   if (res) {
     lsSet('lsName', name); lsSet('lsDiv', d.value);
-    Array.prototype.forEach.call($('checkinEvents').querySelectorAll('input:checked'), function (i) { i.checked = false; });
+    Array.prototype.forEach.call($('checkinEvents').querySelectorAll('input[type=checkbox]:checked'), function (i) { i.checked = false; });
+    openPick = {};
   }
   renderAll();
 }
@@ -900,7 +957,7 @@ async function doArchive() {
   if (res) { archive = null; tab = 'past'; renderAll(); renderSetup(); loadArchive(true); }
 }
 
-document.addEventListener('click', function (e) {
+function onClick(e) {
   var t = e.target.closest ? e.target.closest('[data-act]') : null;
   if (!t || t.dataset.act === 'score') return;
   var d = t.dataset;
@@ -920,6 +977,7 @@ document.addEventListener('click', function (e) {
         if (res) { renderAll(); renderSetup(); }
       })();
       break;
+    case 'setOpen': send({ action: 'setOpen', pin: execPin, id: d.id, event: d.event, open: d.open === '1' }, 'Board changed.').then(renderAll); break;
     case 'setDiv': send({ action: 'setDiv', pin: execPin, id: d.id, div: d.div }, 'Division changed.').then(renderAll); break;
     case 'removeCheckin':
       if (confirm('Remove this person from the comp (and any scores or teams they are in)?')) send({ action: 'removeCheckin', pin: execPin, id: d.id }, 'Removed.').then(renderAll);
@@ -942,10 +1000,15 @@ document.addEventListener('click', function (e) {
       }
       break;
   }
+}
+document.addEventListener('click', function (e) {
+  try { onClick(e); } catch (err) { showMsg('Something went wrong: ' + err.message, 'err'); }
 });
 
 document.addEventListener('change', function (e) {
   var t = e.target;
+  if (t.classList && t.classList.contains('cls-pick')) { openPick[t.dataset.ev] = t.value === 'O'; return; }
+  if (t.name === 'div' || (t.closest && t.closest('#checkinEvents') && t.type === 'checkbox')) renderCheckinEvents();
   if (t.closest && t.closest('#setupCard')) setupDirty = true;
   if (t.dataset && t.dataset.act === 'score') {
     var v = t.value === '' ? null : parseFloat(t.value);
@@ -989,6 +1052,7 @@ setInterval(function () {
   if (dv) { var r = document.querySelector('input[name=div][value="' + dv + '"]'); if (r) r.checked = true; }
 })();
 loadAll();
+window.__pc.ready = true;
 </script>
 </body>
 </html>
