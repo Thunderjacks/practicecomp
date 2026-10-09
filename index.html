@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#002145">
+<title>UBC Loggersports &#8212; Practice Comp</title>
+<!-- PASTE YOUR WEB APP URL (ends in /exec) BETWEEN THE QUOTES ON THE NEXT LINE. Nothing else in this file needs editing. -->
+<meta name="backend-url" content="https://script.google.com/macros/s/AKfycbyJW2Nr1Ul9pmm1pyFVfOJRo1dvprNTndPSa0IJbFkeB5XAdnGcyXibga46HfA_XnmS/exec">
+<script>
+/* Boot guard: if the page script fails to start, say so on screen instead of silently doing nothing. */
+(function () {
+  var pc = window.__pc = { ready: false, errors: [] };
+  function banner() {
+    if (!document.body) return;
+    var b = document.getElementById('bootBanner');
+    if (!b) {
+      b = document.createElement('div'); b.id = 'bootBanner';
+      b.style.cssText = 'background:#fcebeb;color:#791f1f;border-bottom:3px solid #c0392b;padding:12px 16px;font:15px/1.4 Georgia,serif;position:relative;z-index:99';
+      document.body.insertBefore(b, document.body.firstChild);
+    }
+    b.textContent = pc.ready
+      ? 'A part of this page hit an error: ' + pc.errors[pc.errors.length - 1]
+      : "This page's script did not start, so buttons will not work. " + (pc.errors.length ? 'Error: ' + pc.errors[pc.errors.length - 1] + '. ' : 'The file may be cut off or edited incorrectly. ') + 'Re-upload the original file and only change the backend-url line near the top.';
+  }
+  window.addEventListener('error', function (e) { pc.errors.push((e && e.message) || 'unknown error'); banner(); });
+  window.addEventListener('unhandledrejection', function (e) { pc.errors.push(String((e && e.reason && e.reason.message) || (e && e.reason) || 'unknown error')); banner(); });
+  window.addEventListener('load', function () { setTimeout(function () { if (!pc.ready) banner(); }, 400); });
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:wght@700;900&family=Source+Serif+4:wght@400;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#002145; --paper:#F3EEE1; --blue:#0055B7; --gold:#FFC72C; --green:#2E7D5B;
+    --bark:#6E5440; --line:rgba(0,33,69,0.14); --danger:#a32d2d;
+    --display:'Big Shoulders', sans-serif; --serif:'Source Serif 4', Georgia, serif; --mono:'Space Mono', monospace;
+  }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif); font-size:16px; line-height:1.45; }
+  .wrap{ max-width:720px; margin:0 auto; padding:24px 16px 90px; }
+  .hidden{ display:none !important; }
+  h1{ font-family:var(--display); font-weight:900; text-transform:uppercase; font-size:2rem; line-height:1; margin:0 0 4px; }
+  h2{ font-family:var(--display); font-weight:700; text-transform:uppercase; font-size:1.2rem; margin:0 0 12px; }
+  h3{ font-family:var(--display); font-weight:700; text-transform:uppercase; font-size:1.05rem; margin:0 0 8px; }
+  h4{ font-family:var(--display); font-weight:700; text-transform:uppercase; font-size:.95rem; margin:14px 0 6px; color:var(--blue); }
+  .sub{ font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; text-transform:uppercase; color:var(--bark); display:block; }
+  .toprow{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; margin-bottom:14px; }
+  .pill{ font-family:var(--mono); font-size:.66rem; letter-spacing:.07em; text-transform:uppercase; padding:5px 10px; border-radius:20px; white-space:nowrap; }
+  .pill.exec{ background:var(--gold); color:var(--ink); }
+  .pill.busy{ background:var(--ink); color:var(--paper); }
+
+  .tabs{ display:flex; gap:6px; margin-bottom:16px; }
+  .tabs button{ flex:1; background:transparent; color:var(--ink); border:2px solid var(--ink); }
+  .tabs button.on{ background:var(--ink); color:var(--paper); }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px; }
+  label{ font-family:var(--mono); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--bark); display:block; margin-bottom:6px; }
+  input[type=text], input[type=search], input[type=number], input[type=password], input[type=date], select{
+    width:100%; padding:11px 12px; border:1px solid var(--line); border-radius:6px; font-family:var(--serif); font-size:1rem; margin-bottom:12px; background:var(--paper); color:var(--ink);
+  }
+  input:focus, select:focus, button:focus-visible{ outline:2px solid var(--blue); outline-offset:2px; }
+
+  button{ font-family:var(--mono); font-size:.76rem; letter-spacing:.06em; text-transform:uppercase; padding:11px 18px; min-height:42px; border-radius:6px; border:1px solid var(--ink); background:var(--ink); color:var(--paper); cursor:pointer; }
+  button.secondary{ background:transparent; color:var(--ink); }
+  button.gold{ background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:700; }
+  button.danger{ background:var(--danger); border-color:var(--danger); }
+  button.danger-outline{ background:transparent; color:var(--danger); border-color:var(--danger); }
+  button.small{ padding:6px 10px; min-height:32px; font-size:.66rem; }
+  button.link{ background:none; border:none; color:var(--blue); padding:6px 0; min-height:0; text-decoration:underline; text-transform:none; letter-spacing:0; font-family:var(--serif); font-size:.9rem; }
+  button:disabled{ opacity:.5; cursor:not-allowed; }
+  .btnrow{ display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+
+  /* division colour coding: Women's = gold, Open = blue, Mixed = green */
+  .chip{ display:inline-block; font-family:var(--mono); font-weight:700; font-size:.62rem; letter-spacing:.05em; text-transform:uppercase; padding:2px 8px; border-radius:10px; vertical-align:middle; }
+  .chip.W{ background:var(--gold); color:var(--ink); } .chip.M{ background:var(--blue); color:#fff; }
+  .chip.X{ background:var(--green); color:#fff; }       .chip.A{ background:var(--blue); color:#fff; }
+  .dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; vertical-align:baseline; }
+  .dot.W{ background:var(--gold); box-shadow:0 0 0 1px var(--ink); } .dot.M{ background:var(--blue); }
+  .tag{ font-family:var(--mono); font-size:.62rem; letter-spacing:.05em; text-transform:uppercase; color:var(--bark); font-weight:400; }
+
+  /* check-in form */
+  .seg{ display:flex; gap:8px; margin-bottom:12px; }
+  .segopt{ flex:1; position:relative; margin:0; }
+  .segopt input{ position:absolute; opacity:0; inset:0; }
+  .segopt span{ display:block; text-align:center; padding:11px 8px; border:2px solid var(--line); border-radius:8px; font-family:var(--display); font-weight:700; font-size:1.05rem; text-transform:uppercase; color:var(--ink); background:var(--paper); }
+  .segopt.W input:checked + span{ background:var(--gold); border-color:var(--ink); }
+  .segopt.M input:checked + span{ background:var(--blue); border-color:var(--ink); color:#fff; }
+  .segopt input:focus-visible + span{ outline:2px solid var(--blue); outline-offset:2px; }
+  .events-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:14px; }
+  .ev-check{ display:flex; align-items:center; gap:8px; font-family:var(--serif); font-size:.92rem; text-transform:none; letter-spacing:0; color:var(--ink); padding:9px 10px; border:1px solid var(--line); border-radius:6px; background:var(--paper); margin:0; }
+  .ev-check input{ width:auto; margin:0; }
+  .ev-check .tag{ margin-left:auto; }
+  .evset.extra{ display:none; }
+  #eventSetup.more .evset.extra{ display:block; }
+  .evhead{ display:flex; align-items:center; gap:8px; }
+  .evhead .evname{ flex:1; min-width:0; flex-wrap:wrap; }
+  input.ev-note{ width:84px; margin:0; padding:5px 8px; font-size:.8rem; transition:width .18s; flex:0 0 auto; }
+  input.ev-note:focus{ width:56%; }
+  input.ev-custom{ width:11em; max-width:100%; margin:0; padding:3px 8px; font-size:.95rem; }
+  .scorebox{ display:inline-flex; align-items:center; gap:3px; }
+  .scorebox .colon{ font-family:var(--mono); }
+  .scorebox input.score-input[data-part=min]{ width:58px; }
+  .scorebox input.score-input[data-part=sec]{ width:78px; }
+  .scorebox.final{ flex-basis:100%; justify-content:flex-end; margin-top:4px; }
+  .evnote{ font-size:.82rem; color:var(--bark); background:var(--paper); border-left:3px solid var(--gold); padding:4px 8px; margin:0 0 6px; }
+  small.recmeta{ display:block; color:var(--bark); font-size:.72rem; }
+  h4.sect{ margin-top:18px; }
+  .opentag{ font-family:var(--mono); font-size:.6rem; letter-spacing:.05em; text-transform:uppercase; background:var(--blue); color:#fff; border-radius:8px; padding:1px 6px; margin-left:4px; }
+
+  /* roster */
+  .filters{ display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+  .filters button{ padding:6px 12px; min-height:34px; font-size:.68rem; background:transparent; color:var(--ink); }
+  .filters button.on{ background:var(--ink); color:var(--paper); }
+  .person{ border:1px solid var(--line); border-left:5px solid var(--blue); border-radius:6px; margin-bottom:6px; background:#fff; }
+  .person.W{ border-left-color:var(--gold); }
+  .person-head{ width:100%; display:flex; align-items:center; gap:8px; background:none; color:var(--ink); border:none; text-align:left; text-transform:none; letter-spacing:0; font-family:var(--serif); font-size:1rem; padding:10px; min-height:44px; }
+  .person-head .pname{ flex:1; font-weight:600; }
+  .person-head .pcount{ font-family:var(--mono); font-size:.66rem; color:var(--bark); text-transform:uppercase; }
+  .person-body{ padding:0 10px 10px; }
+  .evtag{ display:inline-block; font-size:.8rem; background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:2px 9px; margin:0 5px 5px 0; }
+
+  /* scoreboard */
+  .event-block{ margin-bottom:20px; padding-bottom:6px; }
+  .ghead{ display:flex; align-items:center; gap:8px; margin:8px 0 4px; }
+  .gcount{ font-family:var(--mono); font-size:.64rem; color:var(--bark); text-transform:uppercase; }
+  .row{ display:flex; flex-wrap:wrap; align-items:center; gap:4px 10px; padding:8px 0; border-bottom:1px solid var(--line); font-size:.95rem; }
+  .row.hit{ background:#fff8dc; margin:0 -8px; padding:8px; border-radius:4px; }
+  .place{ width:26px; font-family:var(--display); font-weight:900; font-size:1.2rem; text-align:center; color:var(--bark); }
+  .row.first .place{ color:var(--blue); }
+  .row.first .who{ font-weight:700; }
+  .who{ flex:1 1 110px; min-width:0; }
+  .nm{ white-space:nowrap; }
+  .amp{ color:var(--bark); }
+  .val{ display:flex; align-items:baseline; gap:8px; font-family:var(--mono); white-space:nowrap; margin-left:auto; }
+  .pts{ font-size:.68rem; color:var(--green); }
+  .pending{ color:var(--bark); font-size:.78rem; }
+  .gap{ text-align:center; color:var(--bark); letter-spacing:.3em; padding:2px 0; }
+  input.score-input{ width:88px; margin:0; padding:7px 8px; text-align:right; }
+  .empty{ color:var(--bark); font-size:.9rem; font-style:italic; margin:6px 0; }
+  .empty.small{ font-size:.82rem; }
+  .loading{ font-family:var(--mono); font-size:.8rem; color:var(--bark); }
+  .hint{ font-size:.82rem; color:var(--bark); margin:0 0 10px; }
+
+  /* exec: pairing */
+  .team-event{ margin-bottom:18px; }
+  .team{ display:flex; align-items:center; gap:8px; padding:7px 0; border-bottom:1px solid var(--line); }
+  .team .tnames{ flex:1; }
+  .chips{ display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+  .pchip{ text-transform:none; letter-spacing:0; font-family:var(--serif); font-size:.95rem; padding:8px 14px; min-height:42px; border-radius:22px; background:#fff; color:var(--ink); border:2px solid var(--blue); cursor:pointer; }
+  .pchip.W{ border-color:var(--gold); background:#fff8dc; }
+  .pchip.sel{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .pchip.dim{ opacity:.35; }
+  .evset{ border-bottom:1px solid var(--line); padding:8px 0; }
+  .evname{ display:flex; align-items:center; gap:8px; text-transform:none; letter-spacing:0; font-family:var(--serif); font-size:1rem; color:var(--ink); margin:0 0 4px; }
+  .evname input, .opt input{ width:auto; margin:0; }
+  .evopts{ display:flex; flex-wrap:wrap; gap:8px 14px; align-items:center; padding-left:26px; }
+  .opt{ display:flex; align-items:center; gap:6px; text-transform:none; letter-spacing:0; font-family:var(--serif); font-size:.85rem; margin:0; color:var(--ink); }
+  .evopts select{ width:auto; margin:0; padding:5px 8px; font-size:.82rem; }
+
+  /* past comps */
+  details.past{ border:1px solid var(--line); border-radius:8px; margin-bottom:8px; background:#fff; }
+  details.past > summary{ padding:12px; cursor:pointer; list-style:none; }
+  details.past > summary::-webkit-details-marker{ display:none; }
+  details.past[open] > summary{ border-bottom:1px solid var(--line); }
+  .past-body{ padding:4px 12px 12px; }
+  details.more > summary{ cursor:pointer; color:var(--blue); font-size:.88rem; padding:6px 0; }
+  .person-results{ margin-bottom:18px; }
+  .tbl{ overflow-x:auto; }
+  table{ width:100%; border-collapse:collapse; font-size:.86rem; }
+  th{ text-align:left; font-family:var(--mono); font-size:.62rem; letter-spacing:.06em; text-transform:uppercase; color:var(--bark); border-bottom:1px solid var(--line); padding:6px 8px 6px 0; }
+  td{ padding:8px 8px 8px 0; border-bottom:1px solid var(--line); vertical-align:top; }
+  td small{ color:var(--bark); display:block; }
+
+  #msgSlot{ position:fixed; left:12px; right:12px; bottom:12px; z-index:50; max-width:696px; margin:0 auto; pointer-events:none; }
+  .msg{ font-size:.9rem; padding:12px 14px; border-radius:8px; box-shadow:0 4px 18px rgba(0,33,69,.25); pointer-events:auto; }
+  .msg.err{ background:#fcebeb; color:#791f1f; border:1px solid #e8b4b4; }
+  .msg.ok{ background:#eaf3de; color:#27500a; border:1px solid #b9d79a; }
+  @media (max-width:420px){ .events-grid{ grid-template-columns:1fr; } }
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="toprow">
+    <div>
+      <h1>Practice Comp</h1>
+      <span class="sub" id="compSub">Loading&#8230;</span>
+    </div>
+    <div id="statusSlot"></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button data-act="tab" data-tab="today" class="on" id="tabBtnToday">Today's comp</button>
+    <button data-act="tab" data-tab="past" id="tabBtnPast">Past comps</button>
+  </div>
+
+  <!-- ===================== TODAY ===================== -->
+  <section id="tab-today">
+
+    <div class="card" id="checkinCard">
+      <h2>Check in</h2>
+      <label for="nameInput">Your name</label>
+      <input type="text" id="nameInput" placeholder="First and last name" maxlength="60" autocomplete="name">
+      <label>Division</label>
+      <div class="seg" id="divPick">
+        <label class="segopt W"><input type="radio" name="div" value="W"><span>Women's</span></label>
+        <label class="segopt M"><input type="radio" name="div" value="M"><span>Men's</span></label>
+      </div>
+      <label>Events you're doing today</label>
+      <div class="events-grid" id="checkinEvents"></div>
+      <button id="checkinBtn" data-act="checkin">Check in</button>
+    </div>
+
+    <div class="card" id="rosterCard">
+      <h2>Checked in <span class="tag" id="rosterCount"></span></h2>
+      <div class="filters" id="rosterFilters">
+        <button data-act="filter" data-v="ALL" class="on">All</button>
+        <button data-act="filter" data-v="W">Women's</button>
+        <button data-act="filter" data-v="M">Men's</button>
+      </div>
+      <div id="rosterList" class="loading">Loading&#8230;</div>
+    </div>
+
+    <div class="card" id="scoreboardCard">
+      <h2>Scoreboard</h2>
+      <div class="filters" id="sbTabs"><button data-act="sbTab" data-v="W">Women's</button><button data-act="sbTab" data-v="M">Men's</button></div>
+      <input type="search" id="searchInput" placeholder="Search your name to see your results" autocomplete="off">
+      <div id="scoreboardList" class="loading">Loading&#8230;</div>
+    </div>
+
+    <!-- Exec sign-in lives at the bottom of the page -->
+    <div class="card" id="execGateCard">
+      <h2>Exec access</h2>
+      <p class="hint">Members can ignore this. Execs: enter the PIN to set up the comp, pair teams, and enter scores.</p>
+      <label for="pinInput">Exec PIN</label>
+      <input type="password" id="pinInput" placeholder="Enter PIN" autocomplete="off">
+      <button data-act="unlock">Unlock exec mode</button>
+    </div>
+
+    <div id="execArea" class="hidden">
+      <div class="card" id="setupCard">
+        <h2>Comp setup</h2>
+        <label for="compTitle">Comp title</label>
+        <input type="text" id="compTitle" placeholder="e.g. October Practice Comp" maxlength="80">
+        <label for="compDate">Date</label>
+        <input type="date" id="compDate">
+        <label>Events</label>
+        <p class="hint">Tick the events in this comp. Each event is scored the way it really runs. By default there is a Women's board and a Men's board; tick "Open to both divisions" for one shared board. The small note box is optional and only appears in Past comps (species, diameter, special rules).</p>
+        <div id="eventSetup"></div>
+        <button class="link" id="setupMore" data-act="toggleSetupMore">Show more events</button>
+        <div class="btnrow"><button class="gold" data-act="startComp">Start / update comp</button></div>
+      </div>
+
+      <div class="card" id="teamsCard">
+        <h2>Teams</h2>
+        <div id="teamsBody"></div>
+      </div>
+
+      <div class="card" id="finishCard">
+        <h2>Finish</h2>
+        <p class="hint">When the comp is over, archive it. Results are saved under Past comps and the check-ins and scores are cleared for next time.</p>
+        <div class="btnrow">
+          <button class="gold" data-act="archive">Finish &amp; archive comp</button>
+          <button class="danger-outline" data-act="resetComp">Discard without saving</button>
+          <button class="secondary" data-act="lock">Lock exec mode</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== PAST ===================== -->
+  <section id="tab-past" class="hidden">
+    <div class="card">
+      <h2>Past comps</h2>
+      <input type="search" id="archiveSearch" placeholder="Search a name to see all their results" autocomplete="off">
+      <div id="archiveBody" class="loading">Loading&#8230;</div>
+      <div class="btnrow"><button class="small secondary" data-act="reloadArchive">Refresh</button></div>
+    </div>
+  </section>
+
+</div>
+<div id="msgSlot" aria-live="polite"></div>
+
+<script>
+/* ========================================================================
+   SETUP: paste your Google Apps Script web app URL below (ends in /exec).
+   The exec PIN lives in the Apps Script, never in this file.
+   ======================================================================== */
+var SCRIPT_URL = (function () {
+  var m = document.querySelector('meta[name="backend-url"]');
+  var raw = m ? String(m.getAttribute('content') || '') : '';
+  var hit = raw.match(/https:\/\/script\.google\.com\/[^\s"'<>]+/);   // forgiving: ignores stray quotes or spaces around the pasted URL
+  return hit ? hit[0] : '';
+})();
+
+/* ===== SHARED RULES + SCORING (identical in the page and the Sheet script) ===== */
+var CAT_LABEL = { W: "Women's", M: "Men's", X: 'Mixed', A: 'Open' };
+var POINTS = [10, 7, 5, 3, 2, 1];                 // points for 1st..6th; everyone below 6th gets 0
+var FINALISTS = 6;                                // how many advance to an optional final round
+var GROUP_ORDER = ['W', 'M', 'X', 'A'];
+var CUSTOM = 'Custom Event';
+
+// kind: time (min + sec), hits, points, distance (metres), position (finishing place in an elimination event)
+// dir: 'asc' = lowest wins, 'desc' = highest wins.
+// always: shown in the setup list without pressing "Show more events".
+// allowed (team events): W = two women, M = two men, X = one of each (mixed).
+var EVENT_DEFS = [
+  { name: 'Axe Throw', type: 'individual', kind: 'points', dir: 'desc', unit: 'pts', always: true, canRethrow: true },
+  { name: 'Stock Saw', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Pole Climb', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Underhand Chop - Speed', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Underhand Chop - Hardhit', type: 'individual', kind: 'hits', dir: 'asc', unit: 'hits', always: true },
+  { name: 'Double Buck', type: 'team', allowed: ['W', 'M', 'X'], kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Jack & Jill', type: 'team', allowed: ['X'], kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Single Buck', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Obstacle Pole', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Choker Race', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Pulp Toss', type: 'team', allowed: ['X'], kind: 'time', dir: 'asc', unit: 's', always: true },
+  { name: 'Speed Axe Throw', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: false },
+  { name: 'Vertical Chop', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: false },
+  { name: 'Vertical Chop - Hardhit', type: 'individual', kind: 'hits', dir: 'asc', unit: 'hits', always: false },
+  { name: 'AXE Game', type: 'individual', kind: 'position', dir: 'asc', unit: 'place', always: false },
+  { name: 'Cookie Stack', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: false },
+  { name: 'Grande Prairie Accuracy Cut', type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: false },
+  { name: 'Caber Toss', type: 'individual', kind: 'distance', dir: 'desc', unit: 'm', always: false },
+  { name: 'Traverse', type: 'individual', kind: 'distance', dir: 'asc', unit: 'm', always: false },
+  { name: 'Identification', type: 'individual', kind: 'points', dir: 'desc', unit: 'pts', always: false },
+  { name: 'Birling', type: 'individual', kind: 'position', dir: 'asc', unit: 'place', always: false },
+  { name: CUSTOM, type: 'individual', kind: 'time', dir: 'asc', unit: 's', always: false, custom: true }
+];
+// names used by the previous version, so an old saved comp still loads
+var LEGACY_NAMES = { 'Axe Throwing': 'Axe Throw', 'Underhand Chop': 'Underhand Chop - Speed' };
+
+function findDef(name) {
+  for (var i = 0; i < EVENT_DEFS.length; i++) if (EVENT_DEFS[i].name === name) return EVENT_DEFS[i];
+  return null;
+}
+
+function cleanLabel(s) { return String(s || '').replace(/[\u0000-\u001f]/g, ' ').replace(/^[\s=+\-@]+/, '').replace(/\s+/g, ' ').trim().slice(0, 40); }
+
+// e = { name, open, note, rethrow, base? }  ->  a full event object, or null if unknown
+function mkEvent(e) {
+  if (!e) return null;
+  var name = String(e.name || ''), d, custom = false;
+  if (e.base === CUSTOM) {
+    d = findDef(CUSTOM); custom = true; name = cleanLabel(name) || CUSTOM;
+    if (name !== CUSTOM && findDef(name)) name = name + ' (custom)';
+  } else {
+    if (LEGACY_NAMES[name]) name = LEGACY_NAMES[name];
+    d = findDef(name);
+  }
+  if (!d) return null;
+  var team = d.type === 'team';
+  var mixedOnly = team && d.allowed.length === 1 && d.allowed[0] === 'X';
+  var open = e.open !== undefined ? !!e.open : (e.split === false);
+  return {
+    name: name,
+    base: custom ? CUSTOM : '',
+    type: d.type,
+    kind: d.kind,
+    dir: d.dir,
+    unit: d.unit,
+    allowed: team ? d.allowed.slice() : null,
+    open: mixedOnly ? false : open,
+    rethrow: !!(d.canRethrow && e.rethrow),
+    note: String(e.note || '').replace(/[\u0000-\u001f]/g, ' ').trim().slice(0, 200)
+  };
+}
+
+function isMixedOnly(ev) {
+  return ev.type === 'team' && ev.allowed.length === 1 && ev.allowed[0] === 'X';
+}
+
+function normalizeComp(c) {
+  c = c || {};
+  var events = [], seen = {};
+  (c.events || []).forEach(function (e) {
+    var ev = mkEvent(typeof e === 'string' ? { name: e } : e);
+    if (ev && !seen[ev.name]) { seen[ev.name] = true; events.push(ev); }
+  });
+  return { id: c.id || '', title: c.title || '', date: c.date || '', events: events };
+}
+
+function divOf(p) { return p && p.div === 'W' ? 'W' : 'M'; }          // old 'O' (Open) people are treated as Men's
+function normName(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
+function catOf(a, b) { return a === b ? a : 'X'; }
+
+// Which board a person is on for one event: their own division, unless an exec moved them for that event.
+// Open events and mixed-only events ignore this (one board / mixed pairs).
+function canSwitchBoard(ev) { return !!ev && !ev.open && !isMixedOnly(ev); }
+function classOf(p, ev) {
+  var d = divOf(p);
+  if (!canSwitchBoard(ev)) return d;
+  var b = p && p.board && p.board[ev.name];
+  return (b === 'W' || b === 'M') ? b : d;
+}
+function groupLabel(key) { return CAT_LABEL[key]; }
+
+function pairProblem(ev, a, b) {
+  if (!ev || ev.type !== 'team') return 'That is not a team event.';
+  if (!a || !b || a.id === b.id) return 'Pick two different people.';
+  if (ev.allowed.indexOf(catOf(classOf(a, ev), classOf(b, ev))) === -1) {
+    return isMixedOnly(ev)
+      ? "This event is mixed pairs only (one Women's, one Men's)."
+      : "That pairing isn't allowed for this event.";
+  }
+  return '';
+}
+
+// Suggest pairs for people still unpaired: same board first, then mixed leftovers if allowed.
+function autoPairPlan(ev, people) {
+  var W = people.filter(function (p) { return classOf(p, ev) === 'W'; });
+  var M = people.filter(function (p) { return classOf(p, ev) !== 'W'; });
+  var okW = ev.allowed.indexOf('W') !== -1, okM = ev.allowed.indexOf('M') !== -1, okX = ev.allowed.indexOf('X') !== -1;
+  var pairs = [];
+  if (okW) while (W.length >= 2) pairs.push([W.shift(), W.shift()]);
+  if (okM) while (M.length >= 2) pairs.push([M.shift(), M.shift()]);
+  if (okX) while (W.length && M.length) pairs.push([W.shift(), M.shift()]);
+  return pairs;
+}
+
+function hasScore(v) { return typeof v === 'number' && isFinite(v); }
+
+function rankBoard(list) {
+  list.sort(function (a, b) { return b.points - a.points || a.name.localeCompare(b.name); });
+  list.forEach(function (p) {
+    var better = 0;
+    for (var i = 0; i < list.length; i++) if (list[i].points > p.points) better++;
+    p.rank = better + 1;
+  });
+  return list;
+}
+
+// Rank one board of an event. Ties share a place AND that place's points (two-way tie for 1st = both get 10, next is 3rd).
+// Only the first 6 places score. With the optional final round (Axe Throw), the top 6 on a board throw again:
+//  - if every finalist has a final score, the final decides order (round 1 breaks ties);
+//  - otherwise a final score only separates people who tied in round 1.
+function rankGroup(ev, entries) {
+  var asc = ev.dir === 'asc';
+  function cmpNum(a, b) { return a === b ? 0 : ((asc ? a < b : a > b) ? -1 : 1); }
+  var scored = entries.filter(function (e) { return e.score !== null; });
+  var pending = entries.filter(function (e) { return e.score === null; });
+  scored.forEach(function (e) {
+    var better = 0;
+    scored.forEach(function (o) { if (cmpNum(o.score, e.score) < 0) better++; });
+    e.r1place = better + 1;
+    e.finalist = !!ev.rethrow && e.r1place <= FINALISTS;
+  });
+  var finalists = scored.filter(function (e) { return e.finalist; });
+  var fullMode = finalists.length > 0 && finalists.every(function (e) { return hasScore(e.final); });
+  function blockDone(e) {
+    return finalists.every(function (o) { return o.r1place !== e.r1place || hasScore(o.final); });
+  }
+  function cmp(a, b) {
+    if (a.finalist !== b.finalist) return a.finalist ? -1 : 1;
+    if (a.finalist && b.finalist) {
+      if (fullMode) return cmpNum(a.final, b.final) || cmpNum(a.score, b.score);
+      var r = cmpNum(a.score, b.score);
+      if (r !== 0) return r;
+      return blockDone(a) ? cmpNum(a.final, b.final) : 0;
+    }
+    return cmpNum(a.score, b.score);
+  }
+  scored.forEach(function (e) {
+    var better = 0;
+    scored.forEach(function (o) { if (cmp(o, e) < 0) better++; });
+    e.place = better + 1;
+    e.points = POINTS[better] || 0;
+  });
+  pending.forEach(function (e) { e.place = null; e.points = 0; e.finalist = false; });
+  scored.sort(function (x, y) { return cmp(x, y) || x.names[0].localeCompare(y.names[0]); });
+  pending.sort(function (x, y) { return x.names[0].localeCompare(y.names[0]); });
+  return scored.concat(pending);
+}
+
+function computeStandings(comp, checkins, teams, scores, finals) {
+  var byId = {};
+  checkins.forEach(function (c) { byId[c.id] = c; });
+  var totals = {}, scoredIds = {};
+
+  var events = comp.events.map(function (ev) {
+    var evScores = (scores && scores[ev.name]) || {};
+    var evFinals = (finals && finals[ev.name]) || {};
+    var entities = [];
+    if (ev.type === 'team') {
+      ((teams && teams[ev.name]) || []).forEach(function (t) {
+        var a = byId[t.a], b = byId[t.b];
+        if (!a || !b) return;
+        entities.push({ id: t.id, members: [a.id, b.id], names: [a.name, b.name], divs: [divOf(a), divOf(b)], cat: catOf(classOf(a, ev), classOf(b, ev)) });
+      });
+    } else {
+      checkins.forEach(function (c) {
+        if (c.events.indexOf(ev.name) !== -1) entities.push({ id: c.id, members: [c.id], names: [c.name], divs: [divOf(c)], cat: classOf(c, ev) });
+      });
+    }
+    var map = {};
+    entities.forEach(function (en) {
+      var key = ev.open ? 'A' : en.cat;
+      if (!map[key]) map[key] = { key: key, label: groupLabel(key), entries: [] };
+      map[key].entries.push(en);
+    });
+    var groups = GROUP_ORDER.filter(function (k) { return map[k]; }).map(function (k) {
+      var g = map[k];
+      g.entries.forEach(function (en) {
+        var s = evScores[en.id], f = evFinals[en.id];
+        en.score = hasScore(s) ? s : null;
+        en.final = hasScore(f) ? f : null;
+      });
+      g.entries = rankGroup(ev, g.entries);
+      g.entries.forEach(function (en) {
+        if (en.place === null) return;
+        en.members.forEach(function (id) { totals[id] = (totals[id] || 0) + en.points; scoredIds[id] = true; });
+      });
+      return g;
+    });
+    return { name: ev.name, type: ev.type, kind: ev.kind, dir: ev.dir, unit: ev.unit, open: ev.open, rethrow: ev.rethrow, note: ev.note, groups: groups };
+  });
+
+  var people = checkins.filter(function (c) { return scoredIds[c.id]; })
+    .map(function (c) { return { id: c.id, name: c.name, div: divOf(c), points: totals[c.id] || 0 }; });
+  function clone(list) { return list.map(function (p) { return { id: p.id, name: p.name, div: p.div, points: p.points }; }); }
+  return {
+    events: events,
+    overall: {
+      women: rankBoard(clone(people.filter(function (p) { return p.div === 'W'; }))),
+      men: rankBoard(clone(people.filter(function (p) { return p.div === 'M'; }))),
+      joint: rankBoard(clone(people))
+    }
+  };
+}
+
+// One row per person per scored result (used for the archive).
+function buildResultRows(standings) {
+  var rows = [];
+  standings.events.forEach(function (ev) {
+    ev.groups.forEach(function (g) {
+      g.entries.forEach(function (en) {
+        if (en.place === null) return;
+        en.names.forEach(function (nm, i) {
+          rows.push({ event: ev.name, group: g.label, place: en.place, name: nm, div: en.divs[i],
+                      partner: en.names.length > 1 ? en.names[1 - i] : '', score: en.score, final: en.final,
+                      points: en.points, dir: ev.dir, kind: ev.kind, unit: ev.unit });
+        });
+      });
+    });
+  });
+  return rows;
+}
+
+function trimNum(x) { return String(x).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''); }
+// Times are stored as seconds and shown as m:ss.s once they reach a minute. Other kinds show their unit.
+function fmtScore(score, ev) {
+  if (score === null || score === undefined || score === '') return '';
+  var n = Math.round(Number(score) * 100) / 100;
+  if (!isFinite(n)) return '';
+  var kind = (ev && ev.kind) || ((ev && ev.dir === 'desc') ? 'points' : 'time');
+  if (kind === 'time') {
+    if (n >= 60) {
+      var m = Math.floor(n / 60), r = Math.round((n - m * 60) * 100) / 100;
+      return m + ':' + (r < 10 ? '0' : '') + trimNum(r);
+    }
+    return trimNum(n) + 's';
+  }
+  if (kind === 'hits') return trimNum(n) + (n === 1 ? ' hit' : ' hits');
+  if (kind === 'distance') return trimNum(n) + ' m';
+  if (kind === 'position') return '#' + trimNum(n);
+  return trimNum(n);
+}
+function splitTime(total) {
+  var n = Math.round(Number(total) * 100) / 100;
+  if (!isFinite(n)) return { min: '', sec: '' };
+  var m = Math.floor(n / 60);
+  return { min: m > 0 ? String(m) : '', sec: trimNum(Math.round((n - m * 60) * 100) / 100) };
+}
+
+/* ---------------- history: seasons, standings, records ---------------- */
+// A season runs September to August and is named like "2026-27".
+function seasonOf(dateStr) {
+  var m = /^(\d{4})-(\d{2})/.exec(String(dateStr || ''));
+  if (!m) return '';
+  var y = Number(m[1]), mo = Number(m[2]);
+  var start = mo >= 9 ? y : y - 1;
+  return start + '-' + String((start + 1) % 100).replace(/^(\d)$/, '0$1');
+}
+function seasonList(comps) {
+  var seen = {}, out = [];
+  comps.forEach(function (c) { var s = seasonOf(c.date); if (s && !seen[s]) { seen[s] = true; out.push(s); } });
+  return out.sort().reverse();
+}
+function rowDiv(r) { return r.div === 'W' ? 'W' : 'M'; }
+
+// archive = { comps: [...], rows: [...] }; season = '' for all time.
+function historyView(archive, season) {
+  var cdate = {}, ok = {}, noteOf = {}, compsIn = [];
+  archive.comps.forEach(function (c) {
+    cdate[c.id] = c.date;
+    if (!season || seasonOf(c.date) === season) { ok[c.id] = true; compsIn.push(c); }
+    noteOf[c.id] = c.notes || {};
+  });
+  var rows = archive.rows.filter(function (r) { return ok[r.compId]; });
+
+  // ----- standings: points summed across comps, each person in the division they signed up under
+  var ppl = {};
+  rows.forEach(function (r) {
+    var k = normName(r.name);
+    var p = ppl[k] || (ppl[k] = { id: k, name: r.name, div: rowDiv(r), points: 0, comps: {}, lastDate: '' });
+    p.points += r.points;
+    p.comps[r.compId] = 1;
+    var d = cdate[r.compId] || '';
+    if (d >= p.lastDate) { p.lastDate = d; p.div = rowDiv(r); p.name = r.name; }
+  });
+  var arr = Object.keys(ppl).map(function (k) { var p = ppl[k]; return { id: p.id, name: p.name, div: p.div, points: p.points, comps: Object.keys(p.comps).length }; });
+  function board(list) {
+    var ranked = rankBoard(list.map(function (p) { return { id: p.id, name: p.name, div: p.div, points: p.points, comps: p.comps }; }));
+    return ranked;
+  }
+  var standings = {
+    women: board(arr.filter(function (p) { return p.div === 'W'; })),
+    men: board(arr.filter(function (p) { return p.div === 'M'; })),
+    joint: board(arr)
+  };
+
+  // ----- records: each person's (or pair's) best result per event, best first
+  var byEvent = {}, order = [];
+  rows.forEach(function (r) {
+    if (r.kind === 'position' || !hasScore(r.score)) return;
+    if (!byEvent[r.event]) { byEvent[r.event] = { event: r.event, kind: r.kind || (r.dir === 'desc' ? 'points' : 'time'), unit: r.unit || '', dir: r.dir === 'desc' ? 'desc' : 'asc', rows: [] }; order.push(r.event); }
+    byEvent[r.event].rows.push(r);
+  });
+  function defIndex(n) { for (var i = 0; i < EVENT_DEFS.length; i++) if (EVENT_DEFS[i].name === n) return i; return 999; }
+  order.sort(function (a, b) { return defIndex(a) - defIndex(b) || a.localeCompare(b); });
+  var records = order.map(function (name) {
+    var ev = byEvent[name];
+    function boardFor(filter) {
+      var best = {};
+      ev.rows.filter(filter).forEach(function (r) {
+        var key = r.partner ? [normName(r.name), normName(r.partner)].sort().join('|') : normName(r.name);
+        var cur = best[key];
+        var better = !cur || (ev.dir === 'asc' ? r.score < cur.score : r.score > cur.score) ||
+          (r.score === cur.score && (cdate[r.compId] || '') < (cdate[cur.compId] || ''));
+        if (better) best[key] = { label: r.partner ? r.name + ' & ' + r.partner : r.name, score: r.score, compId: r.compId, date: cdate[r.compId] || '', note: (noteOf[r.compId] || {})[name] || '' };
+      });
+      var list = Object.keys(best).map(function (k) { return best[k]; });
+      list.sort(function (a, b) { return (ev.dir === 'asc' ? a.score - b.score : b.score - a.score) || a.date.localeCompare(b.date); });
+      list.forEach(function (e) {
+        var better = 0;
+        list.forEach(function (o) { if (ev.dir === 'asc' ? o.score < e.score : o.score > e.score) better++; });
+        e.place = better + 1;
+      });
+      return list.slice(0, 10);
+    }
+    return { event: name, kind: ev.kind, unit: ev.unit, dir: ev.dir,
+      boards: { W: boardFor(function (r) { return rowDiv(r) === 'W'; }), M: boardFor(function (r) { return rowDiv(r) === 'M'; }), J: boardFor(function () { return true; }) } };
+  });
+  return { comps: compsIn, rows: rows, standings: standings, records: records };
+}
+/* ===== END SHARED ===== */
+
+
+/* ========================= page code ========================= */
+var TOP_N = 3, TOP_OVERALL = 5, AROUND = 2, POLL_MS = 20000, REC_TOP = 3;
+var WOMENS = "Women's", MENS = "Men's";
+
+var comp = normalizeComp({}), checkins = [], teams = {}, scores = {}, finals = {};
+var execMode = false, execPin = null, tab = 'today';
+var rosterFilter = 'ALL', expandedPeople = {}, expandedGroups = {};
+var sbTab = 'W';                                   // Women's / Men's tab on the live scoreboard
+var overallTab = 'women', overallExpanded = false; // women | men | joint
+var pairSel = null, archive = null, archiveLoading = false;
+var histScope = 'season', histSeason = '', histTab = 'women', recOpen = {}, standOpen = false;
+var busy = 0, seq = 0, lastApplied = 0, setupDirty = false, sending = false, renderPending = false;
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"']/g, function (m) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]; }); }
+function configured() { return SCRIPT_URL !== ''; }
+function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+function todayStr() { var d = new Date(), m = d.getMonth() + 1, day = d.getDate(); return d.getFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (day < 10 ? '0' : '') + day; }
+function range(n) { var a = []; for (var i = 0; i < n; i++) a.push(i); return a; }
+function chip(key) { return '<span class="chip ' + key + '">' + esc(CAT_LABEL[key]) + '</span>'; }
+function allowedText(ev) { return isMixedOnly(ev) ? 'Mixed pairs only' : ev.allowed.map(function (k) { return CAT_LABEL[k]; }).join(' \u00b7 '); }
+function defOf(name) { return findDef(name) || {}; }
+function winText(ev) {
+  if (ev.kind === 'time') return 'fastest wins';
+  if (ev.kind === 'hits') return 'fewest hits wins';
+  if (ev.kind === 'points') return 'highest wins';
+  if (ev.kind === 'position') return 'lowest place wins';
+  return ev.dir === 'asc' ? 'closest wins' : 'farthest wins';
+}
+function kindText(ev) {
+  var k = { time: 'Time', hits: 'Hits', points: 'Points', distance: 'Distance (m)', position: 'Finishing place' }[ev.kind];
+  return k + ' \u00b7 ' + winText(ev);
+}
+
+var msgTimer = null;
+function showMsg(text, type) {
+  $('msgSlot').innerHTML = '<div class="msg ' + type + '">' + esc(text) + '</div>';
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(function () { $('msgSlot').innerHTML = ''; }, 5000);
+}
+function setBusy(d) {
+  busy += d;
+  var parts = [];
+  if (execMode) parts.push('<span class="pill exec">Exec mode</span>');
+  if (busy > 0) parts.push('<span class="pill busy">Saving\u2026</span>');
+  $('statusSlot').innerHTML = parts.join(' ');
+}
+
+/* ---------------- server ---------------- */
+async function apiGet(query) {
+  var r = await fetch(SCRIPT_URL + (query || ''));
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+async function apiPost(body) {
+  // text/plain keeps this a "simple" request, which avoids CORS preflight trouble with Apps Script
+  var r = await fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(body) });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+function applyState(s) {
+  comp = normalizeComp(s.comp);
+  checkins = (s.checkins || []).map(function (c) { return { id: c.id, name: c.name, div: c.div === 'W' ? 'W' : 'M', events: c.events || [], board: c.board || {} }; });
+  teams = s.teams || {};
+  scores = s.scores || {};
+  finals = s.finals || {};
+}
+async function send(body, okMsg) {
+  var my = ++seq;
+  setBusy(1);
+  try {
+    var res = await apiPost(body);
+    setBusy(-1);
+    if (!res.ok) {
+      if (res.error === 'bad pin') {
+        execMode = false; execPin = null;
+        showMsg('Exec session expired. Unlock again.', 'err');
+        renderAll();
+        return null;
+      }
+      showMsg(res.error || 'Something went wrong.', 'err');
+      return null;
+    }
+    if (res.state && my > lastApplied) { lastApplied = my; applyState(res.state); }
+    if (okMsg) showMsg(typeof okMsg === 'function' ? okMsg(res) : okMsg, 'ok');
+    return res;
+  } catch (e) {
+    setBusy(-1);
+    showMsg("Couldn't reach the server. Check your connection and try again.", 'err');
+    return null;
+  }
+}
+async function loadAll(quiet) {
+  if (!configured()) {
+    $('compSub').textContent = 'Not connected';
+    showMsg('This page is not connected to its Google Sheet yet (SCRIPT_URL not set).', 'err');
+    return;
+  }
+  var my = ++seq;
+  try {
+    var res = await apiGet();
+    if (res.ok && my > lastApplied) { lastApplied = my; applyState(res.state); }
+    renderAll();
+    if (execMode && !setupDirty) renderSetup();
+  } catch (e) {
+    if (!quiet) { $('compSub').textContent = 'Offline'; showMsg("Couldn't load the latest data. Retrying automatically.", 'err'); }
+  }
+}
+
+/* ---------------- shared render helpers ---------------- */
+function pickAround(n, matchFn) {
+  var set = {}, hits = {};
+  for (var i = 0; i < n; i++) if (matchFn(i)) {
+    hits[i] = true;
+    for (var k = Math.max(0, i - AROUND); k <= Math.min(n - 1, i + AROUND); k++) set[k] = true;
+  }
+  return { idxs: Object.keys(set).map(Number).sort(function (a, b) { return a - b; }), hits: hits };
+}
+function topCut(places, limit) {            // places = ranks of already-sorted scored entries
+  var cut = Math.min(limit, places.length);
+  while (cut > 0 && cut < places.length && places[cut] === places[cut - 1]) cut++;
+  return cut;
+}
+function rowsWithGaps(idxs, renderFn) {
+  var html = '', prev = null;
+  idxs.forEach(function (i) {
+    if (prev !== null && i !== prev + 1) html += '<div class="gap">\u22ef</div>';
+    html += renderFn(i);
+    prev = i;
+  });
+  return html;
+}
+function scoreFocused() { var a = document.activeElement; return !!(a && a.classList && a.classList.contains('score-input')); }
+function flushRender() { if (renderPending && !scoreFocused()) { renderPending = false; renderScoreboard(); } }
+
+/* ---------------- render: top-level ---------------- */
+function renderAll() {
+  $('compSub').textContent = comp.title ? comp.title + (comp.date ? ' \u00b7 ' + comp.date : '') : 'No active comp';
+  setBusy(0);
+  $('tab-today').classList.toggle('hidden', tab !== 'today');
+  $('tab-past').classList.toggle('hidden', tab !== 'past');
+  $('tabBtnToday').classList.toggle('on', tab === 'today');
+  $('tabBtnPast').classList.toggle('on', tab === 'past');
+  $('execGateCard').classList.toggle('hidden', execMode);
+  $('execArea').classList.toggle('hidden', !execMode);
+  renderCheckinEvents();
+  renderRoster();
+  renderScoreboard();
+  if (execMode) renderTeams();
+  if (tab === 'past') renderArchive();
+}
+
+function renderCheckinEvents() {
+  var grid = $('checkinEvents'), btn = $('checkinBtn');
+  var prev = {};
+  Array.prototype.forEach.call(grid.querySelectorAll('input[type=checkbox]:checked'), function (i) { prev[i.value] = true; });
+  if (!comp.title || !comp.events.length) {
+    grid.innerHTML = '<p class="empty">No comp is set up yet. Check back once an exec starts one.</p>';
+    btn.disabled = true;
+    return;
+  }
+  btn.disabled = sending;
+  grid.innerHTML = comp.events.map(function (ev) {
+    return '<label class="ev-check"><input type="checkbox" value="' + esc(ev.name) + '"' + (prev[ev.name] ? ' checked' : '') + '> ' + esc(ev.name) +
+      (ev.type === 'team' ? '<span class="tag">pairs</span>' : '') +
+      (ev.open ? '<span class="tag">open to both</span>' : '') + '</label>';
+  }).join('');
+}
+
+/* ---------------- render: roster ---------------- */
+function renderRoster() {
+  var nW = checkins.filter(function (c) { return c.div === 'W'; }).length, nM = checkins.length - nW;
+  $('rosterCount').textContent = checkins.length ? '(' + checkins.length + ')' : '';
+  Array.prototype.forEach.call($('rosterFilters').querySelectorAll('button'), function (b) {
+    var v = b.dataset.v;
+    b.classList.toggle('on', v === rosterFilter);
+    b.textContent = v === 'ALL' ? 'All (' + checkins.length + ')' : v === 'W' ? WOMENS + ' (' + nW + ')' : MENS + ' (' + nM + ')';
+  });
+  var list = checkins.filter(function (c) { return rosterFilter === 'ALL' || c.div === rosterFilter; });
+  var el = $('rosterList');
+  el.className = '';
+  if (!list.length) { el.innerHTML = '<p class="empty">' + (checkins.length ? 'No one in this division yet.' : 'No one checked in yet.') + '</p>'; return; }
+  var inComp = {}; comp.events.forEach(function (e) { inComp[e.name] = e; });
+  el.innerHTML = list.map(function (c) {
+    var open = !!expandedPeople[c.id];
+    var evs = c.events.filter(function (n) { return inComp[n]; });
+    var h = '<div class="person ' + c.div + '"><button class="person-head" data-act="togglePerson" data-id="' + esc(c.id) + '" aria-expanded="' + open + '">' +
+      chip(c.div) + '<span class="pname">' + esc(c.name) + '</span><span class="pcount">' + evs.length + (evs.length === 1 ? ' event' : ' events') + '</span><span>' + (open ? '\u25be' : '\u25b8') + '</span></button>';
+    if (open) {
+      h += '<div class="person-body">' + (evs.length ? evs.map(function (n) {
+        var moved = canSwitchBoard(inComp[n]) && classOf(c, inComp[n]) !== c.div;
+        return '<span class="evtag">' + esc(n) + (moved ? '<span class="opentag">' + esc(CAT_LABEL[classOf(c, inComp[n])]) + ' board</span>' : '') + '</span>';
+      }).join('') : '<span class="empty">No events</span>');
+      if (execMode) {
+        evs.forEach(function (n) {
+          var ev = inComp[n];
+          if (!canSwitchBoard(ev)) return;
+          var cur = classOf(c, ev), other = cur === 'W' ? 'M' : 'W';
+          h += '<div class="btnrow"><span class="tag">' + esc(n) + ': ' + esc(CAT_LABEL[cur]) + ' board</span><button class="small secondary" data-act="setBoard" data-id="' + esc(c.id) + '" data-event="' + esc(n) + '" data-board="' + other + '">Move to ' + esc(CAT_LABEL[other]) + ' board</button></div>';
+        });
+        h += '<div class="btnrow"><button class="small secondary" data-act="setDiv" data-id="' + esc(c.id) + '" data-div="' + (c.div === 'W' ? 'M' : 'W') + '">Change division to ' + (c.div === 'W' ? MENS : WOMENS) + '</button>' +
+          '<button class="small danger-outline" data-act="removeCheckin" data-id="' + esc(c.id) + '">Remove</button></div>';
+      }
+      h += '</div>';
+    }
+    return h + '</div>';
+  }).join('');
+}
+
+/* ---------------- render: scoreboard ---------------- */
+function scoreBox(ev, en) {
+  var base = 'class="score-input" data-act="score" data-event="' + esc(ev.name) + '" data-id="' + esc(en.id) + '" ';
+  var label = esc(en.names.join(' and '));
+  if (ev.kind === 'time') {
+    var t = en.score === null ? { min: '', sec: '' } : splitTime(en.score);
+    return '<span class="scorebox" data-sent="' + esc(t.min + '|' + t.sec) + '"><input type="number" inputmode="numeric" step="1" min="0" ' + base + 'data-part="min" value="' + esc(t.min) + '" placeholder="min" aria-label="Minutes for ' + label + '">' +
+      '<span class="colon">:</span><input type="number" inputmode="decimal" step="0.01" min="0" ' + base + 'data-part="sec" value="' + esc(t.sec) + '" placeholder="sec" aria-label="Seconds for ' + label + '"></span>';
+  }
+  var v = en.score === null ? '' : String(en.score);
+  var ph = { hits: 'hits', points: 'points', distance: 'metres', position: 'place' }[ev.kind];
+  return '<span class="scorebox" data-sent="' + esc(v) + '"><input type="number" inputmode="decimal" step="' + (ev.kind === 'distance' ? '0.01' : 'any') + '" min="0" ' + base + 'data-part="num" value="' + esc(v) + '" placeholder="' + ph + '" aria-label="Score for ' + label + '"></span>';
+}
+function finalBox(ev, en) {
+  var v = en.final === null ? '' : String(en.final);
+  return '<span class="scorebox final" data-sent="' + esc(v) + '"><span class="tag">final</span><input type="number" inputmode="decimal" step="any" min="0" class="score-input" data-act="final" data-event="' + esc(ev.name) + '" data-id="' + esc(en.id) + '" data-part="num" value="' + esc(v) + '" placeholder="final" aria-label="Final round score for ' + esc(en.names.join(' and ')) + '"></span>';
+}
+function entryRow(ev, en, hit) {
+  var names = en.names.map(function (n, i) { return '<span class="nm"><i class="dot ' + en.divs[i] + '"></i>' + esc(n) + '</span>'; }).join('<span class="amp"> &amp; </span>');
+  var val;
+  if (execMode) {
+    val = scoreBox(ev, en);
+    if (ev.rethrow && en.finalist) val += finalBox(ev, en);
+  } else {
+    val = en.score === null ? '<span class="pending">pending</span>' : '<span>' + esc(fmtScore(en.score, ev)) + '</span>';
+    if (en.final !== null && en.finalist) val += '<span class="tag">final ' + esc(fmtScore(en.final, ev)) + '</span>';
+  }
+  if (en.place !== null) val += '<span class="pts">+' + en.points + '</span>';
+  return '<div class="row' + (hit ? ' hit' : '') + (en.place === 1 ? ' first' : '') + '"><span class="place">' + (en.place === null ? '\u2013' : en.place) + '</span><span class="who">' + names + '</span><span class="val">' + val + '</span></div>';
+}
+
+function renderGroup(ev, g, q) {
+  var entries = g.entries, key = ev.name + '|' + g.key, idxs, hits = {};
+  var placed = entries.filter(function (e) { return e.place !== null; }).map(function (e) { return e.place; });
+  var topN = topCut(placed, TOP_N);
+  if (q) {
+    var res = pickAround(entries.length, function (i) { return entries[i].names.some(function (n) { return normName(n).indexOf(q) !== -1; }); });
+    idxs = res.idxs; hits = res.hits;
+    if (!idxs.length) return '';
+  } else if (execMode || expandedGroups[key]) {
+    idxs = range(entries.length);
+  } else {
+    idxs = range(topN);
+  }
+  var h = '<div class="ghead">' + chip(g.key) + '<span class="gcount">' + entries.length + (ev.type === 'team' ? (entries.length === 1 ? ' team' : ' teams') : (entries.length === 1 ? ' competitor' : ' competitors')) + '</span></div>';
+  if (!idxs.length) h += '<p class="empty small">No scores yet \u00b7 ' + entries.length + ' entered</p>';
+  h += rowsWithGaps(idxs, function (i) { return entryRow(ev, entries[i], !!hits[i]); });
+  if (!q && !execMode) {
+    if (!expandedGroups[key] && entries.length > idxs.length) h += '<button class="link" data-act="toggleGroup" data-key="' + esc(key) + '">Show all (' + entries.length + ')</button>';
+    else if (expandedGroups[key] && entries.length > topN) h += '<button class="link" data-act="toggleGroup" data-key="' + esc(key) + '">Show top ' + topN + ' only</button>';
+  }
+  return h;
+}
+
+function renderOverall(st, q) {
+  if (!st.overall.joint.length) return '';
+  var tabs = [['women', WOMENS], ['men', MENS], ['joint', 'Joint']];
+  var list = st.overall[overallTab] || [];
+  var h = '<div class="event-block"><h3>Overall standings</h3><div class="filters">' +
+    tabs.map(function (t) { return '<button data-act="overallTab" data-v="' + t[0] + '"' + (t[0] === overallTab ? ' class="on"' : '') + '>' + esc(t[1]) + '</button>'; }).join('') + '</div>';
+  if (!list.length) return h + '<p class="empty small">No one in this category has points yet.</p></div>';
+  var idxs, hits = {};
+  var topN = topCut(list.map(function (p) { return p.rank; }), TOP_OVERALL);
+  if (q) {
+    var res = pickAround(list.length, function (i) { return normName(list[i].name).indexOf(q) !== -1; });
+    idxs = res.idxs; hits = res.hits;
+    if (!idxs.length) return h + '<p class="empty small">No match in this list. Try another tab.</p></div>';
+  } else idxs = (execMode || overallExpanded) ? range(list.length) : range(topN);
+  h += rowsWithGaps(idxs, function (i) {
+    var p = list[i];
+    return '<div class="row' + (hits[i] ? ' hit' : '') + (p.rank === 1 ? ' first' : '') + '"><span class="place">' + p.rank + '</span><span class="who"><i class="dot ' + p.div + '"></i>' + esc(p.name) + '</span><span class="val"><b>' + p.points + '</b><span class="tag">pts</span></span></div>';
+  });
+  if (!q && list.length > topN) h += '<button class="link" data-act="toggleOverall">' + (overallExpanded ? 'Show top ' + topN + ' only' : 'Show all (' + list.length + ')') + '</button>';
+  return h + '</div>';
+}
+
+function renderScoreboard() {
+  if (scoreFocused()) { renderPending = true; return; }   // never rebuild the boxes under someone's cursor
+  renderPending = false;
+  var el = $('scoreboardList');
+  el.className = '';
+  Array.prototype.forEach.call($('sbTabs').querySelectorAll('button'), function (b) { b.classList.toggle('on', b.dataset.v === sbTab); });
+  if (!comp.title || !comp.events.length) { el.innerHTML = '<p class="empty">Nothing to show yet.</p>'; return; }
+  var st = computeStandings(comp, checkins, teams, scores, finals);
+  var raw = $('searchInput').value, q = normName(raw), html = '';
+  st.events.forEach(function (ev) {
+    var inner = '';
+    ev.groups.forEach(function (g) {
+      if (!q && g.key !== 'A' && g.key !== 'X' && g.key !== sbTab) return;   // Women's / Men's tab (open + mixed boards show in both)
+      inner += renderGroup(ev, g, q);
+    });
+    if (inner) html += '<div class="event-block"><h3>' + esc(ev.name) + ' <span class="tag">' + esc(winText(ev)) + '</span>' + (ev.open ? ' <span class="tag">open to both</span>' : '') + '</h3>' + inner + '</div>';
+  });
+  var overallMatch = q && st.overall.joint.some(function (p) { return normName(p.name).indexOf(q) !== -1; });
+  if (!q || overallMatch) html += renderOverall(st, q);
+  el.innerHTML = html || '<p class="empty">' + (q ? 'No one matches "' + esc(raw.trim()) + '".' : 'No one in this tab has entered an event yet.') + '</p>';
+}
+
+/* ---------------- render: exec setup + teams ---------------- */
+function renderSetup() {
+  $('compTitle').value = comp.title || '';
+  $('compDate').value = comp.date || todayStr();
+  var cur = {}, customEv = null;
+  comp.events.forEach(function (e) { if (e.base === CUSTOM) customEv = e; else cur[e.name] = e; });
+  var hiddenCount = 0;
+  $('eventSetup').innerHTML = EVENT_DEFS.map(function (d) {
+    var c = d.custom ? customEv : cur[d.name], on = !!c;
+    var mixed = d.type === 'team' && d.allowed.length === 1 && d.allowed[0] === 'X';
+    var extra = !d.always && !on;
+    if (extra) hiddenCount++;
+    var shown = c || d;
+    var nm = d.custom ? (c ? c.name : CUSTOM) : d.name;
+    var h = '<div class="evset' + (extra ? ' extra' : '') + '" data-ev="' + esc(d.name) + '"><div class="evhead"><label class="evname"><input type="checkbox" class="ev-on"' + (on ? ' checked' : '') + '> ' +
+      (d.custom ? '<input type="text" class="ev-custom" maxlength="40" value="' + esc(nm) + '" aria-label="Name of the custom event">' : '<b>' + esc(d.name) + '</b>') +
+      (d.type === 'team' ? ' <span class="tag">pairs</span>' : '') + '</label>' +
+      '<input type="text" class="ev-note" maxlength="200" value="' + esc(c ? c.note : '') + '" placeholder="note" aria-label="Note for ' + esc(nm) + ' (shown in past results)"></div>' +
+      '<div class="evopts"><span class="tag">' + esc(kindText(shown)) + '</span>' +
+      (mixed ? '<span class="tag">Mixed pairs only</span>' : '<label class="opt"><input type="checkbox" class="ev-open"' + (c && c.open ? ' checked' : '') + '> Open to both divisions (one board)</label>') +
+      (d.canRethrow ? '<label class="opt"><input type="checkbox" class="ev-rethrow"' + (c && c.rethrow ? ' checked' : '') + '> Final round for the top 6</label>' : '') +
+      '</div></div>';
+    return h;
+  }).join('');
+  var more = $('setupMore');
+  more.textContent = $('eventSetup').classList.contains('more') ? 'Show fewer events' : 'Show more events (' + hiddenCount + ')';
+  more.classList.toggle('hidden', hiddenCount === 0 && !$('eventSetup').classList.contains('more'));
+  setupDirty = false;
+}
+function readSetup() {
+  var events = [];
+  Array.prototype.forEach.call($('eventSetup').querySelectorAll('.evset'), function (row) {
+    if (!row.querySelector('.ev-on').checked) return;
+    var d = defOf(row.dataset.ev), op = row.querySelector('.ev-open'), rt = row.querySelector('.ev-rethrow'), cn = row.querySelector('.ev-custom');
+    var e = { name: cn ? (cn.value.trim() || CUSTOM) : row.dataset.ev, open: op ? op.checked : false, rethrow: rt ? rt.checked : false, note: row.querySelector('.ev-note').value.trim() };
+    if (d.custom) e.base = CUSTOM;
+    events.push(e);
+  });
+  return { title: $('compTitle').value.trim(), date: $('compDate').value, events: events };
+}
+
+function renderTeams() {
+  var el = $('teamsBody'), tevs = comp.events.filter(function (e) { return e.type === 'team'; });
+  if (!tevs.length) { el.innerHTML = '<p class="empty">No team events in this comp.</p>'; return; }
+  var byId = {}; checkins.forEach(function (c) { byId[c.id] = c; });
+  var h = '<p class="hint">Tap one person, then another, to pair them. On a computer you can also drag one onto the other. Greyed-out names can\'t be paired with the selected person.</p>';
+  tevs.forEach(function (ev) {
+    var list = teams[ev.name] || [], used = {};
+    list.forEach(function (t) { used[t.a] = true; used[t.b] = true; });
+    var free = checkins.filter(function (c) { return c.events.indexOf(ev.name) !== -1 && !used[c.id]; });
+    var sel = pairSel && pairSel.event === ev.name ? byId[pairSel.id] : null;
+    if (pairSel && pairSel.event === ev.name && !sel) pairSel = null;
+    h += '<div class="team-event"><h3>' + esc(ev.name) + ' <span class="tag">' + esc(allowedText(ev)) + '</span></h3>';
+    list.forEach(function (t) {
+      var a = byId[t.a], b = byId[t.b];
+      if (!a || !b) return;
+      h += '<div class="team">' + chip(ev.open ? 'A' : catOf(classOf(a, ev), classOf(b, ev))) + '<span class="tnames">' + esc(a.name) + ' <span class="amp">&amp;</span> ' + esc(b.name) + '</span>' +
+        '<button class="small secondary" data-act="unpair" data-event="' + esc(ev.name) + '" data-team="' + esc(t.id) + '">Unpair</button></div>';
+    });
+    if (!list.length) h += '<p class="empty small">No teams yet.</p>';
+    if (free.length) {
+      h += '<label style="margin-top:10px">Unpaired (' + free.length + ')</label><div class="chips">' + free.map(function (c) {
+        var cls = 'pchip ' + c.div;
+        if (sel && sel.id === c.id) cls += ' sel';
+        else if (sel && pairProblem(ev, sel, c)) cls += ' dim';
+        return '<button class="' + cls + '" draggable="true" data-act="pick" data-event="' + esc(ev.name) + '" data-id="' + esc(c.id) + '"><i class="dot ' + c.div + '"></i>' + esc(c.name) + '</button>';
+      }).join('') + '</div>';
+      h += '<button class="small secondary" data-act="autoPair" data-event="' + esc(ev.name) + '">Auto-pair remaining</button>';
+    } else if (list.length) h += '<p class="empty small">Everyone is paired.</p>';
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+/* ---------------- render: past comps (history) ---------------- */
+function rowText(e) {
+  var s = fmtScore(e.score, e);
+  if (e.final !== null && e.final !== undefined) s += ' \u00b7 final ' + fmtScore(e.final, e);
+  return s;
+}
+function dedupeRows(rows) {
+  var seen = {}, out = [];
+  rows.forEach(function (r) {
+    var base = { place: r.place, score: r.score, final: r.final, dir: r.dir, kind: r.kind, unit: r.unit, points: r.points };
+    if (r.partner) {
+      var k = [normName(r.name), normName(r.partner)].sort().join('|') + '|' + r.place;
+      if (seen[k]) return;
+      seen[k] = 1;
+      base.label = r.name + ' & ' + r.partner;
+    } else base.label = r.name;
+    out.push(base);
+  });
+  return out;
+}
+function simpleRows(list, from, to) {
+  return list.slice(from, to).map(function (e) {
+    return '<div class="row' + (e.place === 1 ? ' first' : '') + '"><span class="place">' + e.place + '</span><span class="who">' + esc(e.label) + '</span><span class="val">' +
+      (e.score !== undefined ? '<span>' + esc(rowText(e)) + '</span><span class="pts">+' + e.points + '</span>' : '<b>' + e.points + '</b><span class="tag">pts</span>') + '</span></div>';
+  }).join('');
+}
+function limited(list, n) {
+  var cut = topCut(list.map(function (e) { return e.place; }), n);
+  var h = simpleRows(list, 0, cut);
+  if (list.length > cut) h += '<details class="more"><summary>Show all (' + list.length + ')</summary>' + simpleRows(list, cut, list.length) + '</details>';
+  return h;
+}
+function compDetail(c, rows) {
+  var ppl = {};
+  rows.forEach(function (r) { var k = normName(r.name); (ppl[k] = ppl[k] || { id: k, name: r.name, div: r.div, points: 0 }).points += r.points; });
+  var arr = Object.keys(ppl).map(function (k) { return ppl[k]; });
+  function board(title, list) {
+    list = rankBoard(list.map(function (p) { return { id: p.id, name: p.name, div: p.div, points: p.points }; }));
+    if (!list.length) return '';
+    return '<h4>' + esc(title) + '</h4>' + limited(list.map(function (p) { return { place: p.rank, label: p.name, points: p.points }; }), 3);
+  }
+  var h = board('Overall \u00b7 ' + WOMENS, arr.filter(function (p) { return p.div === 'W'; })) + board('Overall \u00b7 ' + MENS, arr.filter(function (p) { return p.div !== 'W'; })) + board('Overall \u00b7 Joint', arr);
+  var order = [], map = {};
+  rows.forEach(function (r) { if (!map[r.event]) { map[r.event] = {}; order.push(r.event); } (map[r.event][r.group] = map[r.event][r.group] || []).push(r); });
+  var notes = c.notes || {};
+  order.forEach(function (ev) {
+    h += '<h4>' + esc(ev) + '</h4>';
+    if (notes[ev]) h += '<p class="evnote">' + esc(notes[ev]) + '</p>';
+    var groups = Object.keys(map[ev]);
+    groups.forEach(function (g) {
+      var list = dedupeRows(map[ev][g].slice().sort(function (a, b) { return a.place - b.place || a.name.localeCompare(b.name); }));
+      if (groups.length > 1) h += '<div class="ghead"><span class="tag">' + esc(g) + '</span></div>';
+      h += limited(list, 3);
+    });
+  });
+  if (execMode) h += '<div class="btnrow"><button class="small danger-outline" data-act="deleteArchive" data-comp="' + esc(c.id) + '">Delete this comp</button></div>';
+  return h;
+}
+function renderPeopleSearch(q) {
+  var by = {};
+  archive.rows.forEach(function (r) { var k = normName(r.name); if (k.indexOf(q) === -1) return; (by[k] = by[k] || { name: r.name, div: r.div, rows: [] }).rows.push(r); });
+  var keys = Object.keys(by).sort();
+  if (!keys.length) return '<p class="empty">No results found for that name.</p>';
+  var cm = {}; archive.comps.forEach(function (c) { cm[c.id] = c; });
+  var h = '';
+  keys.slice(0, 8).forEach(function (k) {
+    var p = by[k], ids = {}, total = 0;
+    p.rows.forEach(function (r) { ids[r.compId] = 1; total += r.points; });
+    p.rows.sort(function (a, b) {
+      var da = (cm[a.compId] || {}).date || '', db = (cm[b.compId] || {}).date || '';
+      return da < db ? 1 : da > db ? -1 : a.event.localeCompare(b.event);
+    });
+    h += '<div class="person-results"><h3>' + chip(p.div) + ' ' + esc(p.name) + '</h3><p class="hint">' + p.rows.length + (p.rows.length === 1 ? ' result' : ' results') + ' in ' + Object.keys(ids).length +
+      (Object.keys(ids).length === 1 ? ' comp' : ' comps') + ' \u00b7 ' + total + ' points</p><div class="tbl"><table><tr><th>Comp</th><th>Event</th><th>Place</th><th>Score</th><th>Pts</th></tr>' +
+      p.rows.map(function (r) {
+        var c = cm[r.compId] || { title: '', date: '' };
+        return '<tr><td>' + esc(c.date) + '<small>' + esc(c.title) + '</small></td><td>' + esc(r.event) + '<small>' + esc(r.group) + (r.partner ? ' \u00b7 with ' + esc(r.partner) : '') + '</small></td><td>' + r.place +
+          '</td><td>' + esc(rowText(r)) + '</td><td>' + r.points + '</td></tr>';
+      }).join('') + '</table></div></div>';
+  });
+  if (keys.length > 8) h += '<p class="hint">Showing 8 of ' + keys.length + ' matches. Type more of the name to narrow it down.</p>';
+  return h;
+}
+function recordsHtml(view) {
+  var key = { women: 'W', men: 'M', joint: 'J' }[histTab];
+  var h = '', any = false;
+  view.records.forEach(function (r) {
+    var list = r.boards[key];
+    if (!list.length) return;
+    any = true;
+    var cut = topCut(list.map(function (e) { return e.place; }), REC_TOP), open = !!recOpen[r.event];
+    var show = open ? list.length : cut;
+    h += '<div class="rec"><h4>' + esc(r.event) + ' <span class="tag">' + esc(winText(r)) + '</span></h4>' +
+      list.slice(0, show).map(function (e) {
+        return '<div class="row' + (e.place === 1 ? ' first' : '') + '"><span class="place">' + e.place + '</span><span class="who">' + esc(e.label) +
+          '<small class="recmeta">' + esc(e.date) + (e.note ? ' \u00b7 ' + esc(e.note) : '') + '</small></span><span class="val"><b>' + esc(fmtScore(e.score, r)) + '</b></span></div>';
+      }).join('');
+    if (list.length > cut) h += '<button class="link" data-act="toggleRec" data-ev="' + esc(r.event) + '">' + (open ? 'Show top ' + cut + ' only' : 'Show more (' + list.length + ')') + '</button>';
+    h += '</div>';
+  });
+  return any ? h : '<p class="empty">No records yet for this selection.</p>';
+}
+function standingsHtml(view) {
+  var list = view.standings[histTab] || [];
+  if (!list.length) return '<p class="empty">No points yet for this selection.</p>';
+  var topN = topCut(list.map(function (p) { return p.rank; }), TOP_OVERALL);
+  var shown = standOpen ? list.length : topN;
+  var h = list.slice(0, shown).map(function (p) {
+    return '<div class="row' + (p.rank === 1 ? ' first' : '') + '"><span class="place">' + p.rank + '</span><span class="who"><i class="dot ' + p.div + '"></i>' + esc(p.name) +
+      '<small class="recmeta">' + p.comps + (p.comps === 1 ? ' comp' : ' comps') + '</small></span><span class="val"><b>' + p.points + '</b><span class="tag">pts</span></span></div>';
+  }).join('');
+  if (list.length > topN) h += '<button class="link" data-act="toggleStand">' + (standOpen ? 'Show top ' + topN + ' only' : 'Show all (' + list.length + ')') + '</button>';
+  return h;
+}
+function renderArchive() {
+  var el = $('archiveBody');
+  if (archiveLoading && !archive) { el.className = 'loading'; el.textContent = 'Loading\u2026'; return; }
+  el.className = '';
+  if (!archive) { el.innerHTML = '<p class="empty">Past comps could not be loaded. Tap Refresh to try again.</p>'; return; }
+  var q = normName($('archiveSearch').value);
+  if (q) { el.innerHTML = renderPeopleSearch(q); return; }
+  if (!archive.comps.length) { el.innerHTML = '<p class="empty">No archived comps yet. Results show up here after an exec finishes a comp.</p>'; return; }
+  var seasons = seasonList(archive.comps);
+  if (histScope === 'season' && (!histSeason || seasons.indexOf(histSeason) === -1)) histSeason = seasons[0] || '';
+  var view = historyView(archive, histScope === 'season' ? histSeason : '');
+  var h = '<div class="filters" id="histScope"><button data-act="histScope" data-v="season"' + (histScope === 'season' ? ' class="on"' : '') + '>Season</button>' +
+    '<button data-act="histScope" data-v="all"' + (histScope === 'all' ? ' class="on"' : '') + '>All time</button></div>';
+  if (histScope === 'season') {
+    h += '<div class="filters">' + seasons.map(function (s) { return '<button data-act="histSeason" data-v="' + esc(s) + '"' + (s === histSeason ? ' class="on"' : '') + '>' + esc(s) + '</button>'; }).join('') + '</div>';
+  }
+  h += '<div class="event-block"><h3>' + (histScope === 'season' ? 'Season ' + esc(histSeason) : 'All time') + '</h3><div class="filters">' +
+    [['women', WOMENS], ['men', MENS], ['joint', 'Joint']].map(function (t) { return '<button data-act="histTab" data-v="' + t[0] + '"' + (t[0] === histTab ? ' class="on"' : '') + '>' + t[1] + '</button>'; }).join('') + '</div>' +
+    '<h4>Total points</h4>' + standingsHtml(view) + '<h4 class="sect">Records</h4>' + recordsHtml(view) + '</div>';
+  if (histScope === 'season') {
+    h += '<h3>Comps this season</h3>' + view.comps.map(function (c) {
+      var rows = archive.rows.filter(function (r) { return r.compId === c.id; });
+      return '<details class="past"><summary><b>' + esc(c.title) + '</b> <span class="tag">' + esc(c.date) + '</span> <span class="tag">' + c.people + ' people</span></summary><div class="past-body">' + compDetail(c, rows) + '</div></details>';
+    }).join('');
+  }
+  el.innerHTML = h;
+}
+async function loadArchive(force) {
+  if (!configured()) { showMsg('This page is not connected to its Google Sheet yet.', 'err'); return; }
+  if (archive && !force) { renderArchive(); return; }
+  archiveLoading = true; renderArchive();
+  try { var res = await apiGet('?view=archive'); if (res.ok) archive = res.archive; }
+  catch (e) { showMsg("Couldn't load past comps.", 'err'); }
+  archiveLoading = false; renderArchive();
+}
+
+/* ---------------- actions ---------------- */
+async function doCheckin() {
+  if (sending) return;
+  var name = $('nameInput').value.trim();
+  if (!name) { showMsg('Enter your name first.', 'err'); return; }
+  var d = document.querySelector('input[name=div]:checked');
+  if (!d) { showMsg("Pick Women's or Men's.", 'err'); return; }
+  var events = Array.prototype.map.call($('checkinEvents').querySelectorAll('input[type=checkbox]:checked'), function (i) { return i.value; });
+  if (!events.length) { showMsg('Pick at least one event.', 'err'); return; }
+  sending = true; $('checkinBtn').disabled = true;
+  var res = await send({ action: 'checkin', name: name, div: d.value, events: events }, function (r) { return r.updated ? 'Check-in updated.' : 'Checked in! Good luck out there.'; });
+  sending = false;
+  if (res) {
+    lsSet('lsName', name); lsSet('lsDiv', d.value);
+    Array.prototype.forEach.call($('checkinEvents').querySelectorAll('input[type=checkbox]:checked'), function (i) { i.checked = false; });
+  }
+  renderAll();
+}
+async function doPair(evName, aId, bId) {
+  var ev = null; comp.events.forEach(function (e) { if (e.name === evName) ev = e; });
+  var a = null, b = null; checkins.forEach(function (c) { if (c.id === aId) a = c; if (c.id === bId) b = c; });
+  var problem = pairProblem(ev, a, b);
+  if (problem) { showMsg(problem, 'err'); return; }
+  pairSel = null;
+  renderTeams();
+  await send({ action: 'pair', pin: execPin, event: evName, a: aId, b: bId }, 'Paired.');
+  renderAll();
+}
+async function doUnlock() {
+  var pin = $('pinInput').value;
+  if (!pin) return;
+  if (!configured()) { showMsg('Not connected to the Google Sheet yet.', 'err'); return; }
+  setBusy(1);
+  try {
+    var res = await apiPost({ action: 'verify', pin: pin });
+    setBusy(-1);
+    if (res.ok) { execMode = true; execPin = pin; $('pinInput').value = ''; showMsg('Exec mode unlocked.', 'ok'); renderAll(); renderSetup(); }
+    else showMsg(res.error || 'Wrong PIN.', 'err');
+  } catch (e) { setBusy(-1); showMsg("Couldn't reach the server.", 'err'); }
+}
+async function doArchive() {
+  if (!confirm('Finish this comp and archive the results? This clears the check-ins and scores. The results are saved under Past comps.')) return;
+  var res = await send({ action: 'archive', pin: execPin }, function (r) { return 'Archived ' + r.archived + ' results.'; });
+  if (res) { archive = null; tab = 'past'; renderAll(); renderSetup(); loadArchive(true); }
+}
+
+/* score boxes: save when focus leaves the box (tabbing between min and sec waits), never re-render under the cursor */
+function readBox(box) {
+  var ins = box.querySelectorAll('input.score-input'), a = ins[0], b = ins[1];
+  if (b) {                                                           // time: minutes + seconds
+    if (a.value === '' && b.value === '') return { key: '|', value: null };
+    var m = a.value === '' ? 0 : parseFloat(a.value), s = b.value === '' ? 0 : parseFloat(b.value);
+    if (isNaN(m) || isNaN(s) || m < 0 || s < 0) return { key: a.value + '|' + b.value, value: NaN };
+    return { key: a.value + '|' + b.value, value: Math.round((m * 60 + s) * 1000) / 1000 };
+  }
+  if (a.value === '') return { key: '', value: null };
+  var v = parseFloat(a.value);
+  return { key: a.value, value: (isNaN(v) || v < 0) ? NaN : v };
+}
+function onScoreFocusOut(e) {
+  var t = e.target;
+  if (!t.classList || !t.classList.contains('score-input')) return;
+  var box = t.closest('.scorebox');
+  if (e.relatedTarget && box && box.contains(e.relatedTarget)) return;        // moving between min and sec
+  var r = readBox(box);
+  if (r.key !== box.dataset.sent) {
+    if (isNaN(r.value)) { showMsg('Enter a valid number.', 'err'); }
+    else {
+      box.dataset.sent = r.key;
+      send({ action: t.dataset.act === 'final' ? 'setFinal' : 'setScore', pin: execPin, event: t.dataset.event, id: t.dataset.id, value: r.value }).then(function () { renderPending = true; flushRender(); });
+    }
+  }
+  setTimeout(flushRender, 60);
+}
+document.addEventListener('focusout', function (e) { try { onScoreFocusOut(e); } catch (err) { showMsg('Something went wrong: ' + err.message, 'err'); } });
+document.addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('score-input')) e.target.blur();
+});
+
+function onClick(e) {
+  var t = e.target.closest ? e.target.closest('[data-act]') : null;
+  if (!t || t.dataset.act === 'score' || t.dataset.act === 'final') return;
+  var d = t.dataset;
+  switch (d.act) {
+    case 'tab': tab = d.tab; renderAll(); if (tab === 'past') loadArchive(false); break;
+    case 'checkin': doCheckin(); break;
+    case 'filter': rosterFilter = d.v; renderRoster(); break;
+    case 'togglePerson': expandedPeople[d.id] = !expandedPeople[d.id]; renderRoster(); break;
+    case 'toggleGroup': expandedGroups[d.key] = !expandedGroups[d.key]; renderScoreboard(); break;
+    case 'toggleOverall': overallExpanded = !overallExpanded; renderScoreboard(); break;
+    case 'sbTab': sbTab = d.v; overallTab = d.v === 'W' ? 'women' : 'men'; overallExpanded = false; renderScoreboard(); break;
+    case 'overallTab': overallTab = d.v; overallExpanded = false; renderScoreboard(); break;
+    case 'unlock': doUnlock(); break;
+    case 'lock': execMode = false; execPin = null; pairSel = null; renderAll(); break;
+    case 'startComp':
+      (async function () {
+        var res = await send({ action: 'setComp', pin: execPin, comp: readSetup() }, 'Comp saved.');
+        if (res) { renderAll(); renderSetup(); }
+      })();
+      break;
+    case 'toggleSetupMore': $('eventSetup').classList.toggle('more'); renderSetupMoreButton(); break;
+    case 'setDiv': send({ action: 'setDiv', pin: execPin, id: d.id, div: d.div }, 'Division changed.').then(renderAll); break;
+    case 'setBoard': send({ action: 'setBoard', pin: execPin, id: d.id, event: d.event, board: d.board }, 'Board changed.').then(renderAll); break;
+    case 'removeCheckin':
+      if (confirm('Remove this person from the comp (and any scores or teams they are in)?')) send({ action: 'removeCheckin', pin: execPin, id: d.id }, 'Removed.').then(renderAll);
+      break;
+    case 'pick':
+      if (!pairSel || pairSel.event !== d.event) { pairSel = { event: d.event, id: d.id }; renderTeams(); }
+      else if (pairSel.id === d.id) { pairSel = null; renderTeams(); }
+      else doPair(d.event, pairSel.id, d.id);
+      break;
+    case 'autoPair': send({ action: 'autoPair', pin: execPin, event: d.event }, function (r) { return r.paired ? 'Paired ' + r.paired + (r.paired === 1 ? ' team.' : ' teams.') : 'No more valid pairs to make.'; }).then(renderAll); break;
+    case 'unpair': send({ action: 'unpair', pin: execPin, event: d.event, teamId: d.team }, 'Unpaired.').then(renderAll); break;
+    case 'archive': doArchive(); break;
+    case 'resetComp':
+      if (confirm('Discard ALL check-ins, teams and scores for this comp WITHOUT saving them? This cannot be undone.')) send({ action: 'reset', pin: execPin }, 'Comp data cleared.').then(renderAll);
+      break;
+    case 'reloadArchive': loadArchive(true); break;
+    case 'histScope': histScope = d.v; renderArchive(); break;
+    case 'histSeason': histSeason = d.v; standOpen = false; recOpen = {}; renderArchive(); break;
+    case 'histTab': histTab = d.v; standOpen = false; recOpen = {}; renderArchive(); break;
+    case 'toggleRec': recOpen[d.ev] = !recOpen[d.ev]; renderArchive(); break;
+    case 'toggleStand': standOpen = !standOpen; renderArchive(); break;
+    case 'deleteArchive':
+      if (confirm('Permanently delete this archived comp and its results?')) {
+        send({ action: 'deleteArchive', pin: execPin, compId: d.comp }, 'Deleted.').then(function (res) { if (res && res.archive) archive = res.archive; renderArchive(); });
+      }
+      break;
+  }
+}
+function renderSetupMoreButton() {
+  var more = $('setupMore'), on = $('eventSetup').classList.contains('more');
+  var n = $('eventSetup').querySelectorAll('.evset.extra').length;
+  more.textContent = on ? 'Show fewer events' : 'Show more events (' + n + ')';
+}
+document.addEventListener('click', function (e) {
+  try { onClick(e); } catch (err) { showMsg('Something went wrong: ' + err.message, 'err'); }
+});
+
+document.addEventListener('change', function (e) {
+  var t = e.target;
+  if (t.closest && t.closest('#setupCard')) setupDirty = true;
+});
+document.addEventListener('input', function (e) { if (e.target.closest && e.target.closest('#setupCard')) setupDirty = true; });
+
+document.addEventListener('dragstart', function (e) {
+  var t = e.target.closest ? e.target.closest('[data-act="pick"]') : null;
+  if (t && e.dataTransfer) e.dataTransfer.setData('text/plain', JSON.stringify({ event: t.dataset.event, id: t.dataset.id }));
+});
+document.addEventListener('dragover', function (e) { if (e.target.closest && e.target.closest('[data-act="pick"]')) e.preventDefault(); });
+document.addEventListener('drop', function (e) {
+  var t = e.target.closest ? e.target.closest('[data-act="pick"]') : null;
+  if (!t || !e.dataTransfer) return;
+  e.preventDefault();
+  try {
+    var src = JSON.parse(e.dataTransfer.getData('text/plain'));
+    if (src.event === t.dataset.event && src.id !== t.dataset.id) doPair(src.event, src.id, t.dataset.id);
+  } catch (err) {}
+});
+
+var searchTimer = null;
+$('searchInput').addEventListener('input', function () { clearTimeout(searchTimer); searchTimer = setTimeout(renderScoreboard, 150); });
+$('archiveSearch').addEventListener('input', function () { clearTimeout(searchTimer); searchTimer = setTimeout(renderArchive, 150); });
+$('pinInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') doUnlock(); });
+
+/* live refresh: skipped while someone is typing or a save is in flight */
+setInterval(function () {
+  if (document.hidden || !configured() || busy > 0 || tab !== 'today') return;
+  var a = document.activeElement;
+  if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT' || a.tagName === 'TEXTAREA')) return;
+  loadAll(true);
+}, POLL_MS);
+
+/* remembered on this device only */
+(function () {
+  var n = lsGet('lsName'), dv = lsGet('lsDiv');
+  if (dv === 'O') dv = 'M';
+  if (n) $('nameInput').value = n;
+  if (dv) { var r = document.querySelector('input[name=div][value="' + dv + '"]'); if (r) r.checked = true; sbTab = dv === 'W' ? 'W' : 'M'; overallTab = dv === 'W' ? 'women' : 'men'; }
+})();
+loadAll();
+window.__pc.ready = true;
+
+</script>
+</body>
+</html>
